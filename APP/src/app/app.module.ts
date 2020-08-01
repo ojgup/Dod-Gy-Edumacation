@@ -3,12 +3,20 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { NavLinkComponent } from './nav-link/nav-link.component';
+import { LabelComponent } from './label/label.component';
+import { InputBoxComponent } from './input-box/input-box.component';
+import { TimeEnteredComponent } from './time-entered/time-entered.component';
+import { TimeLeftComponent } from './time-left/time-left.component';
+import { ReportingComponent } from './reporting/reporting.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NavLinkComponent
+    LabelComponent,
+    InputBoxComponent,
+    TimeEnteredComponent,
+    TimeLeftComponent,
+    ReportingComponent
   ],
   imports: [
     BrowserModule,
