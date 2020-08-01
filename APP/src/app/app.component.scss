@@ -14,7 +14,7 @@ header{
     font-weight: 200;
     letter-spacing: 3px;
     padding: 10px;
-
+    font-weight: bold;
 
     border-bottom: 1px solid;
 
@@ -22,6 +22,7 @@ header{
         display: flex;
         justify-content: space-between;
         align-items: center;
+        padding-bottom: 10px;
     }
 
     .logo{
@@ -29,12 +30,13 @@ header{
         text-align: center;
 
         .sub-heading{
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            padding: 0px 0px 10px 0px;
         }
     }
 
     a {
-        letter-spacing: 2px;
+        letter-spacing: 0px;
     }
 
     nav {
@@ -51,12 +53,12 @@ header{
                     text-decoration: none;
                     color: var(--primary-text);
 
-                    &:hover{
-                        text-decoration: line-through;
-                        text-decoration-color: #FF9F1C;
+                                    
+                    &:hover, &:focus{
+                        background-image: linear-gradient(transparent 9px, #FF9F1C 9px,#FF9F1C 13px,transparent 13px);
                     }
                 }
-            }
+            }  
         }        
     }
 }
