@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { NavLinkComponent } from './nav-link.component';
+import { TimeEnteredComponent } from './time-entered.component';
 
-describe('NavLinkComponent', () => {
-  let component: NavLinkComponent;
-  let fixture: ComponentFixture<NavLinkComponent>;
+describe('TimeEnteredComponent', () => {
+  let component: TimeEnteredComponent;
+  let fixture: ComponentFixture<TimeEnteredComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavLinkComponent ]
+      declarations: [ TimeEnteredComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(NavLinkComponent);
+    fixture = TestBed.createComponent(TimeEnteredComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

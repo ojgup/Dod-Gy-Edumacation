@@ -9,14 +9,20 @@
 
       <nav>
         <ul>
-          <li><a class="nav-link" href="#" routerLink="/">Time Entered</a></li>
-          <li><a class="nav-link" href="#" routerLink="/time-left">Time Left</a></li>
-          <li><a class="nav-link" href="#" routerLink="/reporting">Reporting</a></li>
+          <li><a routerLink="/time-entered" class="nav-link" href="#" >Time Entered</a></li>
+          <li><a routerLink="/time-left" class="nav-link" href="#" >Time Left</a></li>
+          <li><a routerLink="/reporting" class="nav-link" href="#" >Reporting</a></li>
         </ul>
       </nav>
 
   </div>
 
 </header>
+
+<app-label labelName="Test" labelFor="Test"></app-label>
+<app-time-entered></app-time-entered>
+<app-input-box></app-input-box>
+<app-button-box></app-button-box>
+<app-btn-submit></app-btn-submit>
 
 <router-outlet></router-outlet>

@@ -6,5 +6,5 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'dge-attendance-tracker';
+  title = 'Dod&gy Edumacation | COVID-19 Contact Tracer';
 }
