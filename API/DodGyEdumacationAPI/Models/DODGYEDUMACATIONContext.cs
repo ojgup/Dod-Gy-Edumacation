@@ -39,12 +39,12 @@ namespace DodGyEdumacationAPI.Models
                     .HasMaxLength(50);
 
                 entity.Property(e => e.SessionEnd)
-                    .HasColumnName("sessionEnd")
-                    .HasColumnType("datetime");
+                    .HasColumnName("sessionEnd");
+                    //.HasColumnType("datetime");
 
                 entity.Property(e => e.SessionStart)
-                    .HasColumnName("sessionStart");
-                    //.HasColumnType("datetime");
+                    .HasColumnName("sessionStart")
+                    .HasColumnType("datetime");
 
                 entity.Property(e => e.SessionType)
                     .IsRequired()
@@ -78,6 +78,11 @@ namespace DodGyEdumacationAPI.Models
                 entity.Property(e => e.LastName)
                     .IsRequired()
                     .HasColumnName("lastName")
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.UserType)
+                    .IsRequired()
+                    .HasColumnName("userType")
                     .HasMaxLength(50);
             });
 
