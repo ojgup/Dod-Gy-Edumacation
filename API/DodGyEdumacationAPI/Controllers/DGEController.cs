@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DodGyEdumacationAPI.Models;
 using Microsoft.Data.SqlClient;
+using System.Data;
 
 namespace DodGyEdumacationAPI.Controllers
 {
@@ -22,32 +23,45 @@ namespace DodGyEdumacationAPI.Controllers
         }
 
         // GET: api/DGE/user/{userId}
-        // Returns true if userId found, false otherwise 
+        // Returns User object if found, otherwise nothing
         [HttpGet("user/{userId}")]
-        public async Task<bool> GetUser(string userId)
+        public async Task<ActionResult<IEnumerable<User>>> GetUser(string userId)
         {
-            return await _context.User.AnyAsync(u => u.Userid == userId);
+            return await _context.User.Where(u => u.Userid == userId).ToListAsync();
+        }
+
+        // GET: api/DGE/active/{userId}
+        // Returns Session if found, otherwise nothing
+        [HttpGet("open/{userId}")]
+        public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId)
+        {
+            return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == null).ToListAsync();
         }
 
 
-        // POST: api/DGE
-        //Returns 1 if INSERT accepted, 0 if not
+        // POST: api/DGE/start
+        //Returns incremented sessionID from DB if INSERT accepted, otherwise error
         [HttpPost("start")]
-        public async Task<IActionResult> SessionStart(Session session)
+        public async Task<int> SessionStart(Session session)
         {
+            var sessionId = new SqlParameter
+            {
+                ParameterName = "@SESSIONID",
+                DbType = System.Data.DbType.Int32,
+                Direction = System.Data.ParameterDirection.Output
+
+            };
+
             SqlParameter roomCode = new SqlParameter("@ROOMCODE", session.RoomCode);
-            SqlParameter sessionStart = new SqlParameter("@SESSIONSTART", session.SessionStart);
+            SqlParameter sessionStart = new SqlParameter("@SESSIONSTART", session.SessionStart.ToString("yyyy-MM-dd HH:mm:ss.fff"));
             SqlParameter sessionType = new SqlParameter("@SESSIONTYPE", session.SessionType);
             SqlParameter userId = new SqlParameter("@USERID", session.UserId);
 
-            var sql = "EXEC START_SESSION @ROOMCODE, @SESSIONSTART, @SESSIONTYPE, @USERID";
+            var sql = "EXEC @SESSIONID = START_SESSION @ROOMCODE, @SESSIONSTART, @SESSIONTYPE, @USERID";
 
-            int result = await _context.Database.ExecuteSqlRawAsync(sql, roomCode, sessionStart, sessionType, userId);
+            await _context.Database.ExecuteSqlRawAsync(sql, sessionId, roomCode, sessionStart, sessionType, userId);
 
-            if (result == 1)
-                return Ok();
-            else
-                return BadRequest();
+            return Convert.ToInt32(sessionId.Value);
         }
 
     }
