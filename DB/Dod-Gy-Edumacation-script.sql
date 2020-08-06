@@ -1,6 +1,8 @@
-/*CREATE DATABASE DODGYEDUMACATION;
+/*
+DROP DATABASE DODGYEDUMACATION;
+CREATE DATABASE DODGYEDUMACATION;
 USE DODGYEDUMACATION;*/
-/*Stephen and John*/
+
 IF OBJECT_ID('Session') IS NOT NULL
 DROP TABLE [Session];
 
@@ -14,14 +16,16 @@ CREATE TABLE [User]
     userid NVARCHAR(50) NOT NULL,
     firstName NVARCHAR(50) NOT NULL,
     lastName NVARCHAR(50) NOT NULL,
-    CONSTRAINT Pk_User PRIMARY KEY (userid)
+    userType NVARCHAR(50) NOT NULL
+        CONSTRAINT Pk_User PRIMARY KEY (userid),
+    CONSTRAINT userCheck CHECK(userType = 'Student' or userType = 'Staff' or userType = 'Admin')
 );
 
 INSERT INTO [User]
-    (userid, firstName, lastName)
+    (userid, firstName, lastName, userType)
 VALUES
-    ('103043778', 'John', 'Konstantinou'),
-    ('103049802x', 'Stephen', 'Grouios');
+    ('103043778', 'John', 'Konstantinou', 'Student'),
+    ('103049802x', 'Stephen', 'Grouios', 'Staff');
 
 CREATE TABLE [Session]
 (
@@ -33,7 +37,7 @@ CREATE TABLE [Session]
     userId NVARCHAR(50) NOT NULL,
     FOREIGN KEY(userid) REFERENCES [User],
     CONSTRAINT Pk_Session PRIMARY KEY (sessionId),
-    CONSTRAINT CheckType CHECK(sessionType = 'Class' or sessionType = 'Office')
+    CONSTRAINT sessionCheck CHECK(sessionType = 'Class' or sessionType = 'Office')
 )
 
 INSERT INTO [Session]
@@ -45,41 +49,36 @@ VALUES
 GO
 ALTER PROCEDURE START_SESSION
     @ROOMCODE NVARCHAR (50),
-    @SESSIONSTART DATETIME,
+    @SESSIONSTART NVARCHAR(MAX),
     @SESSIONTYPE VARCHAR (50),
     @USERID NVARCHAR (50)
 AS
 BEGIN
     BEGIN TRAN
-        BEGIN TRY
+    BEGIN TRY
 
-            INSERT INTO [Session](roomCode, sessionStart, sessionEnd, sessionType, userId)
-            VALUES(@ROOMCODE, @SESSIONSTART, NULL, @SESSIONTYPE, @USERID)
+            INSERT INTO [Session]
+        (roomCode, sessionStart, sessionEnd, sessionType, userId)
+    VALUES(@ROOMCODE, @SESSIONSTART, NULL, @SESSIONTYPE, @USERID)
         
             COMMIT TRAN
 
-            RETURN 1;
+            RETURN @@IDENTITY
+
         END TRY
         BEGIN CATCH
             ROLLBACK TRAN
                 BEGIN
-                    RETURN 0;
-                    DECLARE @ERRORMSG NVARCHAR(MAX) = ERROR_MESSAGE();
-                    THROW 50000, @ERRORMSG, 1
-                END
+        DECLARE @ERRORMSG NVARCHAR(MAX) = ERROR_MESSAGE();
+        THROW 50000, @ERRORMSG, 1
+    END
         END CATCH
 END
 
-INSERT INTO [Session]
-    (roomCode, sessionStart, sessionEnd, sessionType, userId)
-VALUES
-    ('GD224', '2007/05/08 12:35:29', NULL, 'Class', '103043778');
-
-DELETE FROM SESSION WHERE sessionId > 2;
-
-DBCC CHECKIDENT([Session], RESEED, 2)
+/*DBCC CHECKIDENT([Session], RESEED, 3)
+DELETE FROM [Session] WHERE sessionId > 3
 SELECT * FROM SESSION
+SELECT * FROM [User]*/
 GO
-
-/*EXEC START_SESSION @ROOMCODE = 'GD224', @SESSIONSTART = '2007/05/08 12:35:29', @SESSIONTYPE ='Class', @USERID = '103043778';*/ 
+/*EXEC START_SESSION @ROOMCODE = 'GD224', @SESSIONSTART = '2021-01-06 17:16:40.000', @SESSIONTYPE ='Class', @USERID = '103043778';*/ 
 
