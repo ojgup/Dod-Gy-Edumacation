@@ -16,7 +16,7 @@ CREATE TABLE [User]
     firstName NVARCHAR(50) NOT NULL,
     lastName NVARCHAR(50) NOT NULL,
     userType NVARCHAR(50) NOT NULL
-    CONSTRAINT Pk_User PRIMARY KEY (userid),
+        CONSTRAINT Pk_User PRIMARY KEY (userid),
     CONSTRAINT userCheck CHECK(userType = 'Student' or userType = 'Staff' or userType = 'Admin')
 );
 
@@ -54,23 +54,30 @@ CREATE PROCEDURE START_SESSION
 AS
 BEGIN
     BEGIN TRAN
-    BEGIN TRY
+        BEGIN TRY
 
+        IF EXISTS (SELECT *
+        FROM [Session]
+        WHERE userId = @USERID AND sessionEnd IS NULL)
+            THROW 51000, 'This user has an open session', 1
+        ELSE
             INSERT INTO [Session]
-        (roomCode, sessionStart, sessionEnd, sessionType, userId)
-    VALUES(@ROOMCODE, @SESSIONSTART, NULL, @SESSIONTYPE, @USERID)
-        
+                (roomCode, sessionStart, sessionEnd, sessionType, userId)
+            VALUES(@ROOMCODE, @SESSIONSTART, NULL, @SESSIONTYPE, @USERID)
+
             COMMIT TRAN
 
             RETURN @@IDENTITY
-
         END TRY
         BEGIN CATCH
             ROLLBACK TRAN
-                BEGIN
-        DECLARE @ERRORMSG NVARCHAR(MAX) = ERROR_MESSAGE();
-        THROW 50000, @ERRORMSG, 1
-    END
+                IF ERROR_NUMBER() = 51000
+                    THROW;
+                ELSE
+                    BEGIN
+                        DECLARE @ERRORMSG NVARCHAR(MAX) = ERROR_MESSAGE();
+                        THROW 50000, @ERRORMSG, 1
+                    END
         END CATCH
 END
 
