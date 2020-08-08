@@ -68,5 +68,43 @@ namespace DodGyEdumacationAPI.Controllers
                 return -1;
         }
 
+        // PUT: api/DGE/end
+        //Returns an Ok IActionResult if record is successfully updated, other requests if not
+        [HttpPut("end")]
+        public async Task<IActionResult> SessionEnd(Session session)
+        {
+            try
+            {
+                Session record = (from s in _context.Session where s.SessionId == session.SessionId && s.SessionEnd == null select s).SingleOrDefault();
+
+                if (record != null)
+                {
+                    record.SessionEnd = session.SessionEnd;
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok();
+                }
+                else
+                    return NotFound("Could not find an open session in the database with the information sent.");
+
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                if (CheckEndDate(session.SessionId))
+                {
+                    return BadRequest("The current record has already been updated");
+                }
+                else
+                    return BadRequest(ex.Message);
+            }
+        }
+
+        //Checks Session record and returns true if sessionEnd value has been updated, false if it has not
+        private bool CheckEndDate(int sessionId)
+        {
+            return _context.Session.Any(s => s.SessionId == sessionId && s.SessionEnd != null);
+        }
+
     }
 }

@@ -36,7 +36,8 @@ CREATE TABLE [Session]
     userId NVARCHAR(50) NOT NULL,
     FOREIGN KEY(userid) REFERENCES [User],
     CONSTRAINT Pk_Session PRIMARY KEY (sessionId),
-    CONSTRAINT sessionCheck CHECK(sessionType = 'Class' or sessionType = 'Office')
+    CONSTRAINT sessionCheck CHECK(sessionType = 'Class' or sessionType = 'Office'),
+    CONSTRAINT sessionTime CHECK(sessionStart < sessionEnd)
 )
 
 INSERT INTO [Session]
