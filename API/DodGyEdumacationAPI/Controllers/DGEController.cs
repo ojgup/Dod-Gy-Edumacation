@@ -38,6 +38,14 @@ namespace DodGyEdumacationAPI.Controllers
             return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == null).ToListAsync();
         }
 
+        // GET: api/DGE/active/{userId}
+        // Returns Session if found, otherwise nothing
+        /*[HttpGet("report")]
+        public async Task<ActionResult<IEnumerable<List<Report>>>> GetReport(User user)
+        {
+            return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == null).ToListAsync();
+        }*/
+
 
         // POST: api/DGE/start
         //Returns incremented sessionID from DB if INSERT accepted, otherwise error and returns -1

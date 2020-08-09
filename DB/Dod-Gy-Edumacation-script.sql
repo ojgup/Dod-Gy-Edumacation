@@ -43,9 +43,10 @@ CREATE TABLE [Session]
 INSERT INTO [Session]
     (roomCode, sessionStart, sessionEnd, sessionType, userId)
 VALUES
-    ('GD224', GETDATE(), NULL, 'Class', '103043778'),
-    ('GD224', GETDATE(), NULL, 'Class', '103049802x'),
-    ('GD224', GETDATE(), NULL, 'Office', '103049802x');
+    ('GD224', '2020-01-06 17:16:40.000', '2020-01-06 20:16:40.000', 'Class', '103043778'),
+    ('GD224', '2020-01-06 17:16:40.000', '2020-01-06 20:16:40.000', 'Class', '103049802x'),
+    ('GD224', '2020-02-06 10:16:40.000', '2020-02-06 15:16:40.000', 'Class', '103043778'),
+    ('GD224', '2020-01-06 17:16:40.000', '2020-02-06 15:16:40.000', 'Class', '103049802x');
 GO
 CREATE PROCEDURE START_SESSION
     @ROOMCODE NVARCHAR (50),
