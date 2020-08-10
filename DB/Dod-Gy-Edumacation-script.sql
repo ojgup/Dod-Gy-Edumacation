@@ -1,7 +1,6 @@
-/*
 DROP DATABASE DODGYEDUMACATION;
 CREATE DATABASE DODGYEDUMACATION;
-USE DODGYEDUMACATION;*/
+USE DODGYEDUMACATION;
 
 IF OBJECT_ID('Session') IS NOT NULL
 DROP TABLE [Session];
@@ -37,17 +36,19 @@ CREATE TABLE [Session]
     userId NVARCHAR(50) NOT NULL,
     FOREIGN KEY(userid) REFERENCES [User],
     CONSTRAINT Pk_Session PRIMARY KEY (sessionId),
-    CONSTRAINT sessionCheck CHECK(sessionType = 'Class' or sessionType = 'Office')
+    CONSTRAINT sessionCheck CHECK(sessionType = 'Class' or sessionType = 'Office'),
+    CONSTRAINT sessionTime CHECK(sessionStart < sessionEnd)
 )
 
 INSERT INTO [Session]
     (roomCode, sessionStart, sessionEnd, sessionType, userId)
 VALUES
-    ('GD224', GETDATE(), NULL, 'Class', '103043778'),
-    ('GD224', GETDATE(), NULL, 'Class', '103049802x'),
-    ('GD224', GETDATE(), NULL, 'Office', '103049802x');
+    ('GD224', '2020-01-06 17:16:40.000', '2020-01-06 20:16:40.000', 'Class', '103043778'),
+    ('GD224', '2020-01-06 17:16:40.000', '2020-01-06 20:16:40.000', 'Class', '103049802x'),
+    ('GD224', '2020-02-06 10:16:40.000', '2020-02-06 15:16:40.000', 'Class', '103043778'),
+    ('GD224', '2020-01-06 17:16:40.000', '2020-02-06 15:16:40.000', 'Class', '103049802x');
 GO
-ALTER PROCEDURE START_SESSION
+CREATE PROCEDURE START_SESSION
     @ROOMCODE NVARCHAR (50),
     @SESSIONSTART NVARCHAR(MAX),
     @SESSIONTYPE VARCHAR (50),
@@ -55,30 +56,30 @@ ALTER PROCEDURE START_SESSION
 AS
 BEGIN
     BEGIN TRAN
-    BEGIN TRY
+        BEGIN TRY
 
+        IF EXISTS (SELECT *
+        FROM [Session]
+        WHERE userId = @USERID AND sessionEnd IS NULL)
+            THROW 51000, 'This user has an open session', 1
+        ELSE
             INSERT INTO [Session]
-        (roomCode, sessionStart, sessionEnd, sessionType, userId)
-    VALUES(@ROOMCODE, @SESSIONSTART, NULL, @SESSIONTYPE, @USERID)
-        
+                (roomCode, sessionStart, sessionEnd, sessionType, userId)
+            VALUES(@ROOMCODE, @SESSIONSTART, NULL, @SESSIONTYPE, @USERID)
+
             COMMIT TRAN
 
             RETURN @@IDENTITY
-
         END TRY
         BEGIN CATCH
             ROLLBACK TRAN
-                BEGIN
-        DECLARE @ERRORMSG NVARCHAR(MAX) = ERROR_MESSAGE();
-        THROW 50000, @ERRORMSG, 1
-    END
+                IF ERROR_NUMBER() = 51000
+                    THROW;
+                ELSE
+                    BEGIN
+                        DECLARE @ERRORMSG NVARCHAR(MAX) = ERROR_MESSAGE();
+                        THROW 50000, @ERRORMSG, 1
+                    END
         END CATCH
 END
-
-/*DBCC CHECKIDENT([Session], RESEED, 3)
-DELETE FROM [Session] WHERE sessionId > 3
-SELECT * FROM SESSION
-SELECT * FROM [User]*/
-GO
-/*EXEC START_SESSION @ROOMCODE = 'GD224', @SESSIONSTART = '2021-01-06 17:16:40.000', @SESSIONTYPE ='Class', @USERID = '103043778';*/ 
 

@@ -38,30 +38,80 @@ namespace DodGyEdumacationAPI.Controllers
             return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == null).ToListAsync();
         }
 
+        // GET: api/DGE/active/{userId}
+        // Returns Session if found, otherwise nothing
+        /*[HttpGet("report")]
+        public async Task<ActionResult<IEnumerable<List<Report>>>> GetReport(User user)
+        {
+            return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == null).ToListAsync();
+        }*/
+
 
         // POST: api/DGE/start
-        //Returns incremented sessionID from DB if INSERT accepted, otherwise error
+        //Returns incremented sessionID from DB if INSERT accepted, otherwise error and returns -1
         [HttpPost("start")]
         public async Task<int> SessionStart(Session session)
         {
-            var sessionId = new SqlParameter
+            if (!await _context.Session.AnyAsync(s => s.UserId == session.UserId && s.SessionEnd == null))
             {
-                ParameterName = "@SESSIONID",
-                DbType = System.Data.DbType.Int32,
-                Direction = System.Data.ParameterDirection.Output
+                var sessionId = new SqlParameter
+                {
+                    ParameterName = "@SESSIONID",
+                    DbType = System.Data.DbType.Int32,
+                    Direction = System.Data.ParameterDirection.Output
+                };
 
-            };
+                SqlParameter roomCode = new SqlParameter("@ROOMCODE", session.RoomCode);
+                SqlParameter sessionStart = new SqlParameter("@SESSIONSTART", session.SessionStart.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                SqlParameter sessionType = new SqlParameter("@SESSIONTYPE", session.SessionType);
+                SqlParameter userId = new SqlParameter("@USERID", session.UserId);
 
-            SqlParameter roomCode = new SqlParameter("@ROOMCODE", session.RoomCode);
-            SqlParameter sessionStart = new SqlParameter("@SESSIONSTART", session.SessionStart.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-            SqlParameter sessionType = new SqlParameter("@SESSIONTYPE", session.SessionType);
-            SqlParameter userId = new SqlParameter("@USERID", session.UserId);
+                var sql = "EXEC @SESSIONID = START_SESSION @ROOMCODE, @SESSIONSTART, @SESSIONTYPE, @USERID";
 
-            var sql = "EXEC @SESSIONID = START_SESSION @ROOMCODE, @SESSIONSTART, @SESSIONTYPE, @USERID";
+                await _context.Database.ExecuteSqlRawAsync(sql, sessionId, roomCode, sessionStart, sessionType, userId);
 
-            await _context.Database.ExecuteSqlRawAsync(sql, sessionId, roomCode, sessionStart, sessionType, userId);
+                return Convert.ToInt32(sessionId.Value);
+            }
+            else
+                return -1;
+        }
 
-            return Convert.ToInt32(sessionId.Value);
+        // PUT: api/DGE/end
+        //Returns an Ok IActionResult if record is successfully updated, other requests if not
+        [HttpPut("end")]
+        public async Task<IActionResult> SessionEnd(Session session)
+        {
+            try
+            {
+                Session record = (from s in _context.Session where s.SessionId == session.SessionId && s.SessionEnd == null select s).SingleOrDefault();
+
+                if (record != null)
+                {
+                    record.SessionEnd = session.SessionEnd;
+
+                    await _context.SaveChangesAsync();
+
+                    return Ok();
+                }
+                else
+                    return NotFound("Could not find an open session in the database with the information sent.");
+
+            }
+            catch (DbUpdateConcurrencyException ex)
+            {
+                if (CheckEndDate(session.SessionId))
+                {
+                    return BadRequest("The current record has already been updated");
+                }
+                else
+                    return BadRequest(ex.Message);
+            }
+        }
+
+        //Checks Session record and returns true if sessionEnd value has been updated, false if it has not
+        private bool CheckEndDate(int sessionId)
+        {
+            return _context.Session.Any(s => s.SessionId == sessionId && s.SessionEnd != null);
         }
 
     }
