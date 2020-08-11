@@ -2,6 +2,8 @@ DROP DATABASE DODGYEDUMACATION;
 CREATE DATABASE DODGYEDUMACATION;
 USE DODGYEDUMACATION;
 
+GO
+
 IF OBJECT_ID('Session') IS NOT NULL
 DROP TABLE [Session];
 
@@ -20,11 +22,7 @@ CREATE TABLE [User]
     CONSTRAINT userCheck CHECK(userType = 'Student' or userType = 'Staff' or userType = 'Admin')
 );
 
-INSERT INTO [User]
-    (userid, firstName, lastName, userType)
-VALUES
-    ('103043778', 'John', 'Konstantinou', 'Student'),
-    ('103049802x', 'Stephen', 'Grouios', 'Staff');
+GO
 
 CREATE TABLE [Session]
 (
@@ -40,14 +38,8 @@ CREATE TABLE [Session]
     CONSTRAINT sessionTime CHECK(sessionStart < sessionEnd)
 )
 
-INSERT INTO [Session]
-    (roomCode, sessionStart, sessionEnd, sessionType, userId)
-VALUES
-    ('GD224', '2020-01-06 17:16:40.000', '2020-01-06 20:16:40.000', 'Class', '103043778'),
-    ('GD224', '2020-01-06 17:16:40.000', '2020-01-06 20:16:40.000', 'Class', '103049802x'),
-    ('GD224', '2020-02-06 10:16:40.000', '2020-02-06 15:16:40.000', 'Class', '103043778'),
-    ('GD224', '2020-01-06 17:16:40.000', '2020-02-06 15:16:40.000', 'Class', '103049802x');
 GO
+
 CREATE PROCEDURE START_SESSION
     @ROOMCODE NVARCHAR (50),
     @SESSIONSTART NVARCHAR(MAX),
@@ -55,31 +47,30 @@ CREATE PROCEDURE START_SESSION
     @USERID NVARCHAR (50)
 AS
 BEGIN
-    BEGIN TRAN
-        BEGIN TRY
-
+    BEGIN TRANSACTION
+    BEGIN TRY
         IF EXISTS (SELECT *
         FROM [Session]
         WHERE userId = @USERID AND sessionEnd IS NULL)
-            THROW 51000, 'This user has an open session', 1
+            THROW 51000, 'This user has an open session', 1;
         ELSE
             INSERT INTO [Session]
                 (roomCode, sessionStart, sessionEnd, sessionType, userId)
-            VALUES(@ROOMCODE, @SESSIONSTART, NULL, @SESSIONTYPE, @USERID)
+            VALUES
+                (@ROOMCODE, @SESSIONSTART, NULL, @SESSIONTYPE, @USERID);
 
-            COMMIT TRAN
+        COMMIT TRAN
 
-            RETURN @@IDENTITY
-        END TRY
-        BEGIN CATCH
-            ROLLBACK TRAN
-                IF ERROR_NUMBER() = 51000
-                    THROW;
-                ELSE
-                    BEGIN
-                        DECLARE @ERRORMSG NVARCHAR(MAX) = ERROR_MESSAGE();
-                        THROW 50000, @ERRORMSG, 1
-                    END
-        END CATCH
+        RETURN @@IDENTITY
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRAN
+        IF ERROR_NUMBER() = 51000
+            THROW;
+        ELSE
+            BEGIN
+                DECLARE @ERRORMSG NVARCHAR(MAX) = ERROR_MESSAGE();
+                THROW 50000, @ERRORMSG, 1
+            END
+    END CATCH
 END
-
