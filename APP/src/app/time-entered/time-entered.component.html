@@ -1,19 +1,56 @@
-<div style="display: flex; flex-direction: column; align-items: center;">
+<div class="inputs">
     
-    <div style="align-items: center;">
-        <app-label labelName="User ID:" labelFor="user-id"></app-label>
-        <app-input-box inputName="user-id" class="user-id"></app-input-box>
+    <div class="row">
+        <div class="col-1-1">
+            <app-label labelName="User ID:" labelFor="user-id"></app-label>
+        </div>
+
+        <div class="col-1-2">
+            <app-input-box inputName="user-id" class="user-id"></app-input-box>
+        </div>
     </div>
 
-    <div style="align-items: center;">        
-        <app-label labelName="Room: " labelFor="room"></app-label>
-        <app-input-box inputName="room" class="room"></app-input-box>
-        <app-button-box></app-button-box>
+    <div class="row">        
+
+        <div class="col-1-1">
+            <app-label labelName="Room: " labelFor="room"></app-label>
+        </div>
+
+        <div class="col-1-2">
+            <app-input-box inputName="room" class="room"></app-input-box>
+        </div>
+
+        <div class="col-1-3">
+            <app-button-box></app-button-box>
+        </div>
     </div>
 
-    <div style="align-items: center;">        
-        <app-label labelName="Date Entered: " labelFor="date-entered"></app-label>
-        <app-input-box inputName="date-entered" class="date-entered"></app-input-box>
+    <div class="row">
+        <div class="col-1-1">        
+            <app-label labelName="Date Entered: " labelFor="date-entered"></app-label>
+        </div>
+
+        <div class="col-1-2">
+            <input type="date" name="date-entered" class="session-date">
+        </div>
+        
     </div>
 
+
+    <div class="row">
+        <div class="col-1-1">
+            <app-label labelName="Time Left: " labelFor="Time-left"></app-label>
+        </div>
+
+        <div class="col-1-2">
+            <app-input-box inputName="room" class="room"></app-input-box>
+        </div>
+    </div>
+
+
+    <div class="row">
+        <div class="col-1-4">
+            <app-btn-submit></app-btn-submit>
+        </div> 
+    </div>
 </div>

@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'Dod&gy Edumacation | COVID-19 Contact Tracer';
+
+
+  navlinkClicked(buttonName:String){
+    
+  }
 }

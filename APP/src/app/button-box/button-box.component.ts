@@ -12,19 +12,21 @@ export class ButtonBoxComponent implements OnInit {
   ClassButtonClicked() {
     let Classbtn = document.getElementById("ClassButton");
     let OfficeBtn = document.getElementById("OfficeButton");
-    Classbtn.style.backgroundColor = "grey";
+    Classbtn.style.backgroundColor = "#d1cbcb";
     OfficeBtn.style.backgroundColor = "#3454D1";
+    OfficeBtn.style.color = "white";
+    Classbtn.style.color = "black";
   }
   OfficeButtonClicked(){
     let Classbtn = document.getElementById("ClassButton");
     let OfficeBtn = document.getElementById("OfficeButton");
     Classbtn.style.backgroundColor = "#D1345B";
-    OfficeBtn.style.backgroundColor = "grey";
+    Classbtn.style.color = "white";
+    OfficeBtn.style.backgroundColor = "#d1cbcb";
+    OfficeBtn.style.color = "black";
   }
 
   ngOnInit(): void {
     let Classbtn = document.getElementById("ClassButton");
-    Classbtn.style.backgroundColor = "grey";
   }
-
 }
