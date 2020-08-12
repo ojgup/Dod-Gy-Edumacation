@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using DodGyEdumacationAPI.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace DodGyEdumacationAPI.Controllers
 {
@@ -38,14 +39,38 @@ namespace DodGyEdumacationAPI.Controllers
             return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == null).ToListAsync();
         }
 
-        // GET: api/DGE/active/{userId}
-        // Returns Session if found, otherwise nothing
-        /*[HttpGet("report")]
-        public async Task<ActionResult<IEnumerable<List<Report>>>> GetReport(User user)
+        // GET: api/DGE/report
+        // 
+        [HttpGet("report")]
+        public async Task<List<Report>> GetReport(string userId, DateTime start, DateTime end)
         {
-            return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == null).ToListAsync();
-        }*/
+            /*DateTime start1 = new DateTime(2019, 2, 6, 16, 40, 2);
+            DateTime end = new DateTime(2020, 8, 6, 17, 16, 40);*/
+            //Validation for user - should it retrieve the original user AND the requested userId
+            List<Session> sessions = await _context.Session.Where(r => r.UserId == userId && r.SessionStart >= start && r.SessionEnd <= end).ToListAsync();
+            List<Report> reports = new List<Report>();
 
+            string display = "";
+
+            foreach(Session session in sessions)
+            {
+                //return teacher
+                reports.Add(new Report { DateTimeEntered = session.SessionStart, DateTimeLeft = session.SessionEnd, 
+                    Room = session.RoomCode, SessionType = session.SessionType, Teacher = "Boutros Ghali"});
+            }
+
+            Console.WriteLine(display);
+
+            //Console.WriteLine(start);
+            //Console.WriteLine();
+
+            return reports;
+        }
+
+        /*public string GetTeacher()
+        {
+            return 
+        }*/
 
         // POST: api/DGE/start
         //Returns incremented sessionID from DB if INSERT accepted, otherwise error and returns -1
