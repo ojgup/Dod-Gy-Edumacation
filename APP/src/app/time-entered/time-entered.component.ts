@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import {DataService} from '../data.service';
+import {Session} from '../session';
 
 
 @Component({
@@ -8,9 +10,34 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TimeEnteredComponent implements OnInit {
 
-  constructor() { }
+  userID: string;
+  roomNumber: string;
+  dateEntered: Date;
+
+  hourLeft: number;
+  minutesLeft: number;
+
+  hourEntered: number;
+  minutesEntered: number;
+
+  constructor(private dataService: DataService) { }
 
   ngOnInit(): void {
+  }
+
+  sessionEntered(){
+
+                      
+    this.dateEntered.setHours(this.hourEntered, this.minutesEntered);
+    
+    let enteredSession: Session;
+
+    enteredSession.roomCode = this.roomNumber;
+    enteredSession.sessionStart = enteredSession;
+    enteredSession.sessionEnd = new Date().setHours(this.hourLeft, this.minutesLeft);
+    enteredSession.userID = this.userID;
+
+    this.dataService.postSession(enteredSession);
   }
 
 }

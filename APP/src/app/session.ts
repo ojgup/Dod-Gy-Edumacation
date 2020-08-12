@@ -3,4 +3,5 @@ export interface Session {
     sessionStart: any;
     sessionEnd: any;
     userID: string;
+    sessionType: "Class";
 }

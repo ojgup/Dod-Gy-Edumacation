@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Session } from '../session';
 
 @Component({
   selector: 'app-btn-submit',
@@ -9,7 +10,7 @@ export class BtnSubmitComponent implements OnInit {
 
   constructor() { }
 
+  
   ngOnInit(): void {
   }
-
 }

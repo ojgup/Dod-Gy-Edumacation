@@ -8,6 +8,10 @@ import { Component, OnInit, Input } from '@angular/core';
 export class InputBoxComponent implements OnInit {
 
   @Input() inputName: string;
+
+  userID: string;
+  room: string;
+  
   constructor() { }
 
   ngOnInit(): void {
