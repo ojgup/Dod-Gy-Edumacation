@@ -104,7 +104,7 @@ namespace DodGyEdumacationAPI.Controllers
                 return Convert.ToInt32(sessionId.Value);
             }
             else
-                return -1;
+               return -1;
         }
 
         // PUT: api/DGE/end
