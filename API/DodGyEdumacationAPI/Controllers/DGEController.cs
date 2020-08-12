@@ -44,25 +44,31 @@ namespace DodGyEdumacationAPI.Controllers
         [HttpGet("report")]
         public async Task<List<Report>> GetReport(string userId, DateTime start, DateTime end)
         {
-            /*DateTime start1 = new DateTime(2019, 2, 6, 16, 40, 2);
-            DateTime end = new DateTime(2020, 8, 6, 17, 16, 40);*/
             //Validation for user - should it retrieve the original user AND the requested userId
             List<Session> sessions = await _context.Session.Where(r => r.UserId == userId && r.SessionStart >= start && r.SessionEnd <= end).ToListAsync();
             List<Report> reports = new List<Report>();
 
-            string display = "";
+            SqlParameter sessionStart;
+            SqlParameter sessionEnd;
+            SqlParameter roomCode;
+            SqlParameter sessionId;
 
-            foreach(Session session in sessions)
+            foreach (Session session in sessions)
             {
-                //return teacher
-                reports.Add(new Report { DateTimeEntered = session.SessionStart, DateTimeLeft = session.SessionEnd, 
-                    Room = session.RoomCode, SessionType = session.SessionType, Teacher = "Boutros Ghali"});
+                sessionStart = new SqlParameter("@SESSIONSTART", session.SessionStart);
+                sessionEnd = new SqlParameter("@SESSIONEND", session.SessionEnd);
+                roomCode = new SqlParameter("@ROOMCODE", session.RoomCode);
+                sessionId = new SqlParameter("@SESSIONID", session.SessionId);
+
+                var sql = "EXEC @REPORT = GET_REPORT @SESSIONSTART, @SESSIONEND, @ROOMCODE, @SESSIONID";
+
+                List<Report> report = await _context.Report.FromSqlRaw(sql, sessionStart, sessionEnd, roomCode, sessionId).ToListAsync();
+
+                reports.Add(new Report { DateTimeEntered = report[0].DateTimeEntered, DateTimeLeft = report[0].DateTimeLeft, 
+                    Room = report[0].Room, SessionType = report[0].SessionType, Teacher = report[0].Teacher});
             }
 
-            Console.WriteLine(display);
-
-            //Console.WriteLine(start);
-            //Console.WriteLine();
+            Console.WriteLine(reports);
 
             return reports;
         }

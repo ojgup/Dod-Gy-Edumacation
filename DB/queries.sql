@@ -21,5 +21,8 @@ SELECT * FROM [Session] INNER JOIN [User] ON [User].userId
 [Session].sessionStart < @START AND [Session].sessionEnd >
 */
 
+/*EXEC GET_REPORT @SESSIONSTART = '2020-01-08 15:00:00.000', @SESSIONEND = '2020-01-08 18:00:00.000', 
+@ROOMCODE ='GD224' , @SESSIONID = 3;*/
+
 
 

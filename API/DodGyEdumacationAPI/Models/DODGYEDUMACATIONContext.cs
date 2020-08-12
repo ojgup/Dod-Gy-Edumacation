@@ -18,6 +18,8 @@ namespace DodGyEdumacationAPI.Models
         public virtual DbSet<Session> Session { get; set; }
         public virtual DbSet<User> User { get; set; }
 
+        public virtual DbSet<Report> Report { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -40,7 +42,7 @@ namespace DodGyEdumacationAPI.Models
 
                 entity.Property(e => e.SessionEnd)
                     .HasColumnName("sessionEnd");
-                    //.HasColumnType("datetime");
+                //.HasColumnType("datetime");
 
                 entity.Property(e => e.SessionStart)
                     .HasColumnName("sessionStart")
@@ -84,6 +86,11 @@ namespace DodGyEdumacationAPI.Models
                     .IsRequired()
                     .HasColumnName("userType")
                     .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Report>(entity =>
+            {
+                entity.HasNoKey();
             });
 
             OnModelCreatingPartial(modelBuilder);

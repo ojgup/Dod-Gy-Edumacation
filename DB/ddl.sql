@@ -38,21 +38,7 @@ CREATE TABLE [Session]
     CONSTRAINT sessionCheck CHECK(sessionType = 'Class' or sessionType = 'Office'),
     CONSTRAINT sessionTime CHECK(sessionStart < sessionEnd)
 )
-
-<<<<<<< HEAD:DB/Dod-Gy-Edumacation-script.sql
-INSERT INTO [Session]
-    (roomCode, sessionStart, sessionEnd, sessionType, userId)
-VALUES
-    ('GD224', '2020-01-06 10:30:00.000', '2020-01-06 14:30:00.000', 'Class', '103043778'),
-    ('GD224', '2020-01-06 10:00:00.000', '2020-01-06 14:45:00.000', 'Class', '103049802x'),
-    ('GD224', '2020-02-06 13:00:00.000', '2020-02-06 17:00:00.000', 'Class', '103043778'),
-    ('GD224', '2020-02-06 13:15:00.000', '2020-02-06 16:55:00.000', 'Class', '103049802x'),
-    ('AC123', '2020-03-06 10:00:00.000', '2020-03-06 14:00:00.000', 'Class', '103043778'),
-    ('CD222', '2020-03-06 10:00:00.000', '2020-03-06 14:00:00.000', 'Class', '103049802x');
-=======
->>>>>>> 65cc0eaeca6f78e63f5ff667a7eca939a51fc90d:DB/ddl.sql
 GO
-
 CREATE PROCEDURE START_SESSION
     @ROOMCODE NVARCHAR (50),
     @SESSIONSTART NVARCHAR(MAX),
@@ -86,4 +72,25 @@ BEGIN
                 THROW 50000, @ERRORMSG, 1
             END
     END CATCH
+END
+GO
+CREATE PROCEDURE GET_REPORT
+   @SESSIONSTART DATETIME,
+   @SESSIONEND DATETIME,
+   @ROOMCODE NVARCHAR(50),
+   @SESSIONID INT
+AS
+BEGIN
+    SELECT [Session].sessionStart, [Session].sessionEnd, 
+    [Session].roomCode, [Session].sessionType,
+    Teacher = (SELECT TOP 1 CONCAT([User].firstName, ' ', [User].lastName)  
+    FROM [User]  
+    INNER JOIN [Session] ON [User].userid = [Session].userId
+    WHERE [User].userType = 'Staff' 
+    AND [Session].roomCode = @ROOMCODE
+    AND [Session].sessionStart < @SESSIONEND
+    AND [Session].sessionEnd > @SESSIONSTART)
+    FROM [User]  
+    INNER JOIN [Session] ON [User].userid = [Session].userId
+    WHERE  [Session].sessionID = @SESSIONID
 END
