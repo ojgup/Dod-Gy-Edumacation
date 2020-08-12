@@ -1,3 +1,4 @@
+USE Master;
 DROP DATABASE DODGYEDUMACATION;
 CREATE DATABASE DODGYEDUMACATION;
 USE DODGYEDUMACATION;
@@ -38,6 +39,18 @@ CREATE TABLE [Session]
     CONSTRAINT sessionTime CHECK(sessionStart < sessionEnd)
 )
 
+<<<<<<< HEAD:DB/Dod-Gy-Edumacation-script.sql
+INSERT INTO [Session]
+    (roomCode, sessionStart, sessionEnd, sessionType, userId)
+VALUES
+    ('GD224', '2020-01-06 10:30:00.000', '2020-01-06 14:30:00.000', 'Class', '103043778'),
+    ('GD224', '2020-01-06 10:00:00.000', '2020-01-06 14:45:00.000', 'Class', '103049802x'),
+    ('GD224', '2020-02-06 13:00:00.000', '2020-02-06 17:00:00.000', 'Class', '103043778'),
+    ('GD224', '2020-02-06 13:15:00.000', '2020-02-06 16:55:00.000', 'Class', '103049802x'),
+    ('AC123', '2020-03-06 10:00:00.000', '2020-03-06 14:00:00.000', 'Class', '103043778'),
+    ('CD222', '2020-03-06 10:00:00.000', '2020-03-06 14:00:00.000', 'Class', '103049802x');
+=======
+>>>>>>> 65cc0eaeca6f78e63f5ff667a7eca939a51fc90d:DB/ddl.sql
 GO
 
 CREATE PROCEDURE START_SESSION
