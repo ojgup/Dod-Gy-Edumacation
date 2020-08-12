@@ -1,7 +1,7 @@
 export interface Session {
     roomCode: string;
     sessionStart: any;
-    sessionEnd: any;
+    sessionEnd?: any;
     userID: string;
-    sessionType: "Class";
+    sessionType: string;
 }

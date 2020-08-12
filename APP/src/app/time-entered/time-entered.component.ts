@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {DataService} from '../data.service';
-import {Session} from '../session';
+import { DataService } from '../data.service';
+import { Session } from '../session';
 
 
 @Component({
@@ -25,18 +25,23 @@ export class TimeEnteredComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  sessionEntered(){
+  sessionEntered() {
+    /*Input fields should be type='number' with min and max attributes limiting user input*/
+    //Must check session type and validate all inputs
+    //Check date format being sent correctly
 
-                      
-    this.dateEntered.setHours(this.hourEntered, this.minutesEntered);
-    
-    let enteredSession: Session;
+    this.dateEntered = new Date();
+    this.dateEntered.setHours(this.hourEntered, this.minutesEntered, 0, 0);
 
-    enteredSession.roomCode = this.roomNumber;
-    enteredSession.sessionStart = enteredSession;
-    enteredSession.sessionEnd = new Date().setHours(this.hourLeft, this.minutesLeft);
-    enteredSession.userID = this.userID;
+    let enteredSession: Session =
+    {
+      'roomCode': this.roomNumber,
+      'sessionStart': this.dateEntered.toJSON(),//'2019-01-06T17:16:40'
+      'userID': this.userID,
+      'sessionType': 'Class'
+    };
 
+    console.log(this.dateEntered.toJSON());
     this.dataService.postSession(enteredSession);
   }
 

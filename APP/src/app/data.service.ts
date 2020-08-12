@@ -7,7 +7,7 @@ import {User} from './user';
   providedIn: 'root'
 })
 export class DataService {
-  apiURL = '';
+  apiURL = "https://localhost:5001/api/DGE/start";
 
   constructor(private _http: HttpClient) { }
 
@@ -16,6 +16,6 @@ export class DataService {
   }
 
   postSession(sessionEntered: Session){
-    return this._http.post<Session>(this.apiURL, sessionEntered);
+    this._http.post("https://localhost:5001/api/DGE/start", sessionEntered).subscribe();
   }
 }
