@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TimeEnteredComponent } from './time-entered/time-entered.component';
-import { TimeLeftComponent } from './time-left/time-left.component';
+import { SessionComponent } from './session/session.component';
+import { ReportingComponent } from './reporting/reporting.component';
 
 const routes: Routes = [
-  {path: 'time-entered', component: TimeEnteredComponent},
-  {path: 'time-left', component: TimeLeftComponent}
+  {path: 'session', component: SessionComponent},
+  {path: 'reporting', component: ReportingComponent},
 ];
 
 @NgModule({

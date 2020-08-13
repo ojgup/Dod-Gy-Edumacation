@@ -9,9 +9,8 @@ import {LabelComponent} from './label/label.component';
 import {InputBoxComponent} from './input-box/input-box.component';
 import { ButtonBoxComponent } from './button-box/button-box.component';
 import { BtnSubmitComponent } from './btn-submit/btn-submit.component';
-import {TimeEnteredComponent} from './time-entered/time-entered.component';
-import {TimeLeftComponent} from './time-left/time-left.component';
 import {DataService} from './data.service';
+import { SessionComponent } from './session/session.component';
 
 @NgModule({
   declarations: [
@@ -20,8 +19,7 @@ import {DataService} from './data.service';
     InputBoxComponent,
     ButtonBoxComponent,
     BtnSubmitComponent,
-    TimeEnteredComponent,
-    TimeLeftComponent
+    SessionComponent
   ],
   imports: [
     BrowserModule,
