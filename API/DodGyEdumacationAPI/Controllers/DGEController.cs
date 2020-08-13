@@ -44,7 +44,7 @@ namespace DodGyEdumacationAPI.Controllers
         [HttpGet("report")]
         public async Task<List<Report>> GetReport(string userId, DateTime start, DateTime end)
         {
-            //Validation for user - should it retrieve the original user AND the requested userId
+            //Discuss validation options - front end to check user access type by User retreived
             List<Session> sessions = await _context.Session.Where(r => r.UserId == userId && r.SessionStart >= start && r.SessionEnd <= end).ToListAsync();
             List<Report> reports = new List<Report>();
 
@@ -60,12 +60,18 @@ namespace DodGyEdumacationAPI.Controllers
                 roomCode = new SqlParameter("@ROOMCODE", session.RoomCode);
                 sessionId = new SqlParameter("@SESSIONID", session.SessionId);
 
-                var sql = "EXEC @REPORT = GET_REPORT @SESSIONSTART, @SESSIONEND, @ROOMCODE, @SESSIONID";
+                var sql = "EXEC GET_REPORT @SESSIONSTART, @SESSIONEND, @ROOMCODE, @SESSIONID";
 
                 List<Report> report = await _context.Report.FromSqlRaw(sql, sessionStart, sessionEnd, roomCode, sessionId).ToListAsync();
 
-                reports.Add(new Report { DateTimeEntered = report[0].DateTimeEntered, DateTimeLeft = report[0].DateTimeLeft, 
-                    Room = report[0].Room, SessionType = report[0].SessionType, Teacher = report[0].Teacher});
+                reports.Add(new Report
+                {
+                    SessionStart = report[0].SessionStart,
+                    SessionEnd = report[0].SessionEnd,
+                    RoomCode = report[0].RoomCode,
+                    SessionType = report[0].SessionType,
+                    Teacher = report[0].Teacher
+                });
             }
 
             Console.WriteLine(reports);
@@ -73,10 +79,6 @@ namespace DodGyEdumacationAPI.Controllers
             return reports;
         }
 
-        /*public string GetTeacher()
-        {
-            return 
-        }*/
 
         // POST: api/DGE/start
         //Returns incremented sessionID from DB if INSERT accepted, otherwise error and returns -1
@@ -104,7 +106,7 @@ namespace DodGyEdumacationAPI.Controllers
                 return Convert.ToInt32(sessionId.Value);
             }
             else
-               return -1;
+                return -1;
         }
 
         // PUT: api/DGE/end
