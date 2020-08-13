@@ -14,8 +14,8 @@ export class TimeEnteredComponent implements OnInit {
   roomNumber: string;
   dateEntered: Date;
 
-  hourLeft: number;
-  minutesLeft: number;
+  /*hourLeft: number;
+  minutesLeft: number;*/
 
   hourEntered: number;
   minutesEntered: number;
