@@ -16,6 +16,7 @@ GO
 CREATE TABLE [User]
 (
     userid NVARCHAR(50) NOT NULL,
+    [password] BINARY(64) NOT NULL,
     firstName NVARCHAR(50) NOT NULL,
     lastName NVARCHAR(50) NOT NULL,
     userType NVARCHAR(50) NOT NULL
@@ -49,14 +50,14 @@ BEGIN
     BEGIN TRANSACTION
     BEGIN TRY
         IF EXISTS (SELECT *
-        FROM [Session]
-        WHERE userId = @USERID AND sessionEnd IS NULL)
+    FROM [Session]
+    WHERE userId = @USERID AND sessionEnd IS NULL)
             THROW 51000, 'This user has an open session', 1;
         ELSE
             INSERT INTO [Session]
-                (roomCode, sessionStart, sessionEnd, sessionType, userId)
-            VALUES
-                (@ROOMCODE, @SESSIONSTART, NULL, @SESSIONTYPE, @USERID);
+        (roomCode, sessionStart, sessionEnd, sessionType, userId)
+    VALUES
+        (@ROOMCODE, @SESSIONSTART, NULL, @SESSIONTYPE, @USERID);
 
         COMMIT TRAN
 
@@ -68,29 +69,30 @@ BEGIN
             THROW;
         ELSE
             BEGIN
-                DECLARE @ERRORMSG NVARCHAR(MAX) = ERROR_MESSAGE();
-                THROW 50000, @ERRORMSG, 1
-            END
+        DECLARE @ERRORMSG NVARCHAR(MAX) = ERROR_MESSAGE();
+        THROW 50000, @ERRORMSG, 1
+    END
     END CATCH
 END
 GO
 CREATE PROCEDURE GET_REPORT
-   @SESSIONSTART DATETIME,
-   @SESSIONEND DATETIME,
-   @ROOMCODE NVARCHAR(50),
-   @SESSIONID INT
+    @SESSIONSTART DATETIME,
+    @SESSIONEND DATETIME,
+    @ROOMCODE NVARCHAR(50),
+    @SESSIONID INT
 AS
 BEGIN
-    SELECT [Session].sessionStart, [Session].sessionEnd, 
-    [Session].roomCode, [Session].sessionType,
-    Teacher = (SELECT TOP 1 CONCAT([User].firstName, ' ', [User].lastName)  
-    FROM [User]  
-    INNER JOIN [Session] ON [User].userid = [Session].userId
-    WHERE [User].userType = 'Staff' 
-    AND [Session].roomCode = @ROOMCODE
-    AND [Session].sessionStart < @SESSIONEND
-    AND [Session].sessionEnd > @SESSIONSTART)
-    FROM [User]  
-    INNER JOIN [Session] ON [User].userid = [Session].userId
+    SELECT [Session].sessionStart, [Session].sessionEnd,
+        [Session].roomCode, [Session].sessionType,
+        Teacher = (SELECT TOP 1
+            CONCAT([User].firstName, ' ', [User].lastName)
+        FROM [User]
+            INNER JOIN [Session] ON [User].userid = [Session].userId
+        WHERE [User].userType = 'Staff'
+            AND [Session].roomCode = @ROOMCODE
+            AND [Session].sessionStart < @SESSIONEND
+            AND [Session].sessionEnd > @SESSIONSTART)
+    FROM [User]
+        INNER JOIN [Session] ON [User].userid = [Session].userId
     WHERE  [Session].sessionID = @SESSIONID
 END

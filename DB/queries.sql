@@ -2,7 +2,8 @@
 DELETE FROM [Session] WHERE sessionId = 3
 SELECT * FROM SESSION
 SELECT [Session].*, [User].userType FROM [SESSION] INNER JOIN [User] ON [User].userId = [Session].userId 
-SELECT * FROM [User]*/
+SELECT * FROM [User]
+*/
 /*UPDATE [Session] SET sessionEnd = GETDATE() WHERE sessionId = 1
 /*EXEC START_SESSION @ROOMCODE = 'GD224', @SESSIONSTART = '2021-01-06 17:16:40.000', @SESSIONTYPE ='Class', @USERID = '103043778';
 USE Master

@@ -9,6 +9,8 @@ using DodGyEdumacationAPI.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace DodGyEdumacationAPI.Controllers
 {
@@ -23,12 +25,20 @@ namespace DodGyEdumacationAPI.Controllers
             _context = context;
         }
 
-        // GET: api/DGE/user/{userId}
-        // Returns User object if found, otherwise nothing
-        [HttpGet("user/{userId}")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUser(string userId)
+        // GET: api/DGE/login}
+        // Returns User if found and password matches
+        [HttpGet("login")]
+        public IQueryable<User> LoginUser(Login login)
         {
-            return await _context.User.Where(u => u.Userid == userId).ToListAsync();
+            var passwordHash = SHA512.Create();
+            passwordHash.ComputeHash(Encoding.UTF8.GetBytes(login.Password));
+            
+            var user = (from u in _context.User where u.Userid == login.UserId && u.Password == passwordHash.Hash  select new User 
+            {Userid = u.Userid, UserType = u.UserType,  FirstName = u.FirstName, LastName = u.LastName});
+
+            Console.WriteLine(passwordHash.Hash);
+
+            return user;
         }
 
         // GET: api/DGE/active/{userId}

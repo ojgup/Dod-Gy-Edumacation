@@ -17,8 +17,9 @@ namespace DodGyEdumacationAPI.Models
 
         public virtual DbSet<Session> Session { get; set; }
         public virtual DbSet<User> User { get; set; }
-
         public virtual DbSet<Report> Report { get; set; }
+        public virtual DbSet<Login> Login { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -72,6 +73,10 @@ namespace DodGyEdumacationAPI.Models
                     .HasColumnName("userid")
                     .HasMaxLength(50);
 
+                entity.Property(e => e.Password)
+                    .HasColumnName("password");
+                    //.HasMaxLength(64);
+
                 entity.Property(e => e.FirstName)
                     .IsRequired()
                     .HasColumnName("firstName")
@@ -89,6 +94,11 @@ namespace DodGyEdumacationAPI.Models
             });
 
             modelBuilder.Entity<Report>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
+            modelBuilder.Entity<Login>(entity =>
             {
                 entity.HasNoKey();
             });

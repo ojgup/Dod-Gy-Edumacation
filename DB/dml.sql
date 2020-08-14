@@ -1,11 +1,11 @@
 USE DODGYEDUMACATION;
 INSERT INTO [User]
-    (userid, firstName, lastName, userType)
+    (userid, [password], firstName, lastName, userType)
 VALUES
-    ('103043778', 'John', 'Konstantinou', 'Student'),
-    ('123456789', 'Jason', 'Yeggs', 'Student'),
-    ('103049802x', 'Stephen', 'Grouios', 'Staff'),
-    ('111222333x', 'Boutros', 'Ghali', 'Staff');
+    ('103043778', HASHBYTES('SHA2_512', 'student'), 'John', 'Konstantinou', 'Student'),
+    ('123456789', HASHBYTES('SHA2_512', 'student'), 'Jason', 'Yeggs', 'Student'),
+    ('103049802x', HASHBYTES('SHA2_512', 'staff'), 'Stephen', 'Grouios', 'Staff'),
+    ('111222333x', HASHBYTES('SHA2_512', 'staff'), 'Boutros', 'Ghali', 'Staff');
 
 INSERT INTO [Session]
     (roomCode, sessionStart, sessionEnd, sessionType, userId)
