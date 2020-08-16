@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { DataService } from '../data.service';
+import { Session } from '../session';
 
 @Component({
   selector: 'app-reporting',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ReportingComponent implements OnInit {
 
-  constructor() { }
+  userID: string;
+  StartDate: Date;
+  EndDate: Date;
+  constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
   }
+  GetSessions(){
 
+  }
 }

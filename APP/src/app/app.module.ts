@@ -11,6 +11,8 @@ import { ButtonBoxComponent } from './button-box/button-box.component';
 import { BtnSubmitComponent } from './btn-submit/btn-submit.component';
 import {DataService} from './data.service';
 import { SessionComponent } from './session/session.component';
+import { ReportingComponent } from './reporting/reporting.component';
+import { ReportingTableComponent } from './reporting-table/reporting-table.component';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,9 @@ import { SessionComponent } from './session/session.component';
     InputBoxComponent,
     ButtonBoxComponent,
     BtnSubmitComponent,
-    SessionComponent
+    SessionComponent,
+    ReportingComponent,
+    ReportingTableComponent
   ],
   imports: [
     BrowserModule,
