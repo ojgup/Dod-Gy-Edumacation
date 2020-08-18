@@ -25,5 +25,10 @@ SELECT * FROM [Session] INNER JOIN [User] ON [User].userId
 /*EXEC GET_REPORT @SESSIONSTART = '2020-01-08 15:00:00.000', @SESSIONEND = '2020-01-08 18:00:00.000', 
 @ROOMCODE ='GD224' , @SESSIONID = 3;*/
 
+/*DELETE FROM [Session] WHERE sessionId > 10*/
+
+/*UPDATE [Session] SET sessionStart = '2020-08-18 12:45:00.000'
+WHERE sessionId = 15*/
+
 
 

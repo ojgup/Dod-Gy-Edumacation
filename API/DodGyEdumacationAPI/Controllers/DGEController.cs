@@ -46,7 +46,8 @@ namespace DodGyEdumacationAPI.Controllers
         [HttpGet("open/{userId}")]
         public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId)
         {
-            return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == null).ToListAsync();
+            return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == 
+            null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear).ToListAsync();
         }
 
         // GET: api/DGE/report
@@ -92,7 +93,7 @@ namespace DodGyEdumacationAPI.Controllers
 
         // POST: api/DGE/start
         //Returns incremented sessionID from DB if INSERT accepted, otherwise error and returns -1
-        [HttpPost("start")]
+        /*[HttpPost("start")]
         public async Task<int> SessionStart(Session session)
         {
             if (!await _context.Session.AnyAsync(s => s.UserId == session.UserId && s.SessionEnd == null))
@@ -117,6 +118,32 @@ namespace DodGyEdumacationAPI.Controllers
             }
             else
                 return -1;
+        }*/
+
+        // POST: api/DGE/start
+        //Returns an OK result if insert Session successful 
+        [HttpPost("start")]
+        public async Task<IActionResult> SessionStart(Session session)
+        {
+            try
+            {
+                Session record = FindOpenSession(session);
+
+                if (record == null)
+                {
+                    _context.Session.Add(session);
+                    await _context.SaveChangesAsync();
+
+                    return Ok();
+                }
+                else
+                    return NotFound("Could not find an open session in the database with the information sent.");
+
+            }
+            catch (SqlException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT: api/DGE/end
@@ -126,7 +153,7 @@ namespace DodGyEdumacationAPI.Controllers
         {
             try
             {
-                Session record = (from s in _context.Session where s.SessionId == session.SessionId && s.SessionEnd == null select s).SingleOrDefault();
+                Session record = FindOpenSession(session);
 
                 if (record != null)
                 {
@@ -149,6 +176,13 @@ namespace DodGyEdumacationAPI.Controllers
                 else
                     return BadRequest(ex.Message);
             }
+        }
+
+        //Checks Session in database and returns an open Session
+        private Session FindOpenSession(Session session)
+        {
+            Session record = (from s in _context.Session where s.SessionId == session.SessionId && s.SessionEnd == null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear select s).SingleOrDefault();
+            return record;
         }
 
         //Checks Session record and returns true if sessionEnd value has been updated, false if it has not
