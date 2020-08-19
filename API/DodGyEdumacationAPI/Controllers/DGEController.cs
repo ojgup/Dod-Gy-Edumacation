@@ -7,9 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using DodGyEdumacationAPI.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using System.Security.Cryptography;
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
+using static DodGyEdumacationAPI.Startup;
 
 namespace DodGyEdumacationAPI.Controllers
 {
@@ -21,22 +20,8 @@ namespace DodGyEdumacationAPI.Controllers
 
         public DGEController(DODGYEDUMACATIONContext context)
         {
-            _context = context;
+            _context = context; 
         }
-
-        // GET: api/DGE/login}
-        // Returns User if found and password matches
-        /*[HttpGet("login")]
-        public IQueryable<User> LoginUser(Login login)
-        {
-            var passwordHash = SHA512.Create();
-            passwordHash.ComputeHash(Encoding.UTF8.GetBytes(login.Password));
-            
-            var user = (from u in _context.User where u.Userid == login.UserId && u.Password == passwordHash.Hash  select new User 
-            {Userid = u.Userid, UserType = u.UserType,  FirstName = u.FirstName, LastName = u.LastName});
-
-            return user;
-        }*/
 
         // GET: api/DGE/active/{userId}
         // Returns Session if found, otherwise nothing
@@ -48,8 +33,7 @@ namespace DodGyEdumacationAPI.Controllers
         }
 
         // GET: api/DGE/report
-        // 
-        [HttpGet("report")]
+        [HttpGet("report"), Authorize]
         public async Task<List<Report>> GetReport(string userId, DateTime start, DateTime end)
         {
             //Discuss validation options - front end to check user access type by User retreived
@@ -82,44 +66,12 @@ namespace DodGyEdumacationAPI.Controllers
                 });
             }
 
-            Console.WriteLine(reports);
-
             return reports;
         }
 
-
-        // POST: api/DGE/start
-        //Returns incremented sessionID from DB if INSERT accepted, otherwise error and returns -1
-        /*[HttpPost("start")]
-        public async Task<int> SessionStart(Session session)
-        {
-            if (!await _context.Session.AnyAsync(s => s.UserId == session.UserId && s.SessionEnd == null))
-            {
-                var sessionId = new SqlParameter
-                {
-                    ParameterName = "@SESSIONID",
-                    DbType = System.Data.DbType.Int32,
-                    Direction = System.Data.ParameterDirection.Output
-                };
-
-                SqlParameter roomCode = new SqlParameter("@ROOMCODE", session.RoomCode);
-                SqlParameter sessionStart = new SqlParameter("@SESSIONSTART", session.SessionStart.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-                SqlParameter sessionType = new SqlParameter("@SESSIONTYPE", session.SessionType);
-                SqlParameter userId = new SqlParameter("@USERID", session.UserId);
-
-                var sql = "EXEC @SESSIONID = START_SESSION @ROOMCODE, @SESSIONSTART, @SESSIONTYPE, @USERID";
-
-                await _context.Database.ExecuteSqlRawAsync(sql, sessionId, roomCode, sessionStart, sessionType, userId);
-
-                return Convert.ToInt32(sessionId.Value);
-            }
-            else
-                return -1;
-        }*/
-
         // POST: api/DGE/start
         //Returns an OK result if insert Session successful 
-        [HttpPost("start")]
+        [HttpPost("start"), Authorize]
         public async Task<IActionResult> SessionStart(Session session)
         {
             try
@@ -145,7 +97,7 @@ namespace DodGyEdumacationAPI.Controllers
 
         // PUT: api/DGE/end
         //Returns an Ok IActionResult if record is successfully updated, other requests if not
-        [HttpPut("end")]
+        [HttpPut("end"), Authorize]
         public async Task<IActionResult> SessionEnd(Session session)
         {
             try

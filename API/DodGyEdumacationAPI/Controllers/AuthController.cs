@@ -8,6 +8,7 @@ using System.Text;
 using DodGyEdumacationAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
+using static DodGyEdumacationAPI.Startup;
 
 namespace DodGyEdumacationAPI.Controllers
 {
@@ -41,7 +42,7 @@ namespace DodGyEdumacationAPI.Controllers
 
             if (user.Count() != 0)
             {
-                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));//change secret key
+                var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config.GetSection("AppSettings").GetSection("Secret").Value));
                 var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
 
                 var tokeOptions = new JwtSecurityToken(

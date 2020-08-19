@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using System.Configuration;
 using System.Text;
 
 namespace DodGyEdumacationAPI
@@ -44,7 +45,7 @@ namespace DodGyEdumacationAPI
 
                     ValidIssuer = "http://localhost:5001",
                     ValidAudience = "http://localhost:5001",
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"))//Secret key
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Config.GetSection("AppSettings").GetSection("Secret").Value))
                 };
             });
             /*Move to JWT Middleware class*/
