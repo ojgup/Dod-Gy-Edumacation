@@ -9,6 +9,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DodGyEdumacationAPI.Controllers
 {
@@ -25,7 +26,7 @@ namespace DodGyEdumacationAPI.Controllers
 
         // GET: api/DGE/login}
         // Returns User if found and password matches
-        [HttpGet("login")]
+        /*[HttpGet("login")]
         public IQueryable<User> LoginUser(Login login)
         {
             var passwordHash = SHA512.Create();
@@ -35,11 +36,11 @@ namespace DodGyEdumacationAPI.Controllers
             {Userid = u.Userid, UserType = u.UserType,  FirstName = u.FirstName, LastName = u.LastName});
 
             return user;
-        }
+        }*/
 
         // GET: api/DGE/active/{userId}
         // Returns Session if found, otherwise nothing
-        [HttpGet("open/{userId}")]
+        [HttpGet("open/{userId}"), Authorize]
         public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId)
         {
             return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == 
