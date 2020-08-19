@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DodGyEdumacationAPI.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -35,8 +33,6 @@ namespace DodGyEdumacationAPI.Controllers
             
             var user = (from u in _context.User where u.Userid == login.UserId && u.Password == passwordHash.Hash  select new User 
             {Userid = u.Userid, UserType = u.UserType,  FirstName = u.FirstName, LastName = u.LastName});
-
-            Console.WriteLine(passwordHash.Hash);
 
             return user;
         }
