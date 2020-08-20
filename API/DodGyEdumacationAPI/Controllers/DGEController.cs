@@ -8,7 +8,6 @@ using DodGyEdumacationAPI.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
-using static DodGyEdumacationAPI.Startup;
 
 namespace DodGyEdumacationAPI.Controllers
 {
@@ -20,7 +19,7 @@ namespace DodGyEdumacationAPI.Controllers
 
         public DGEController(DODGYEDUMACATIONContext context)
         {
-            _context = context; 
+            _context = context;
         }
 
         // GET: api/DGE/active/{userId}
@@ -28,15 +27,41 @@ namespace DodGyEdumacationAPI.Controllers
         [HttpGet("open/{userId}"), Authorize]
         public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId)
         {
-            return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == 
+            var session =  await _context.Session.Where(s => s.UserId == userId && s.SessionEnd ==
             null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear).ToListAsync();
+
+            if (session.Count() != 0)
+                return Ok(session);
+            else
+                return NotFound("No open sessions found");
+        }
+
+        // GET: api/DGE/user/{userId}
+        // Return User if found, otherwise nothing
+        [HttpGet("user/{userId}"), Authorize]
+        public async Task<ActionResult<IEnumerable<User>>> GetUser(string userId)
+        {
+            var user = await _context.User.Where(u => u.Userid == userId).Select(u =>
+            new User
+            {
+                Userid = u.Userid,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                UserType = u.UserType
+            }
+            ).ToListAsync();
+
+            if (user.Count() != 0)
+                return Ok(user);
+            else
+                return NotFound("User not found");
         }
 
         // GET: api/DGE/report
+        //Returns Reports if found, otherwise NotFoundObjectResult
         [HttpGet("report"), Authorize]
-        public async Task<List<Report>> GetReport(string userId, DateTime start, DateTime end)
+        public async Task<ActionResult<IEnumerable<Report>>> GetReport(string userId, DateTime start, DateTime end)
         {
-            //Discuss validation options - front end to check user access type by User retreived
             List<Session> sessions = await _context.Session.Where(r => r.UserId == userId && r.SessionStart >= start && r.SessionEnd <= end).ToListAsync();
             List<Report> reports = new List<Report>();
 
@@ -66,7 +91,10 @@ namespace DodGyEdumacationAPI.Controllers
                 });
             }
 
-            return reports;
+            if (reports.Count() != 0)
+                return Ok(reports);
+            else
+                return NotFound("No reports found");
         }
 
         // POST: api/DGE/start
