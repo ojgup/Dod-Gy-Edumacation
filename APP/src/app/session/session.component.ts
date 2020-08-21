@@ -54,7 +54,7 @@ export class SessionComponent implements OnInit {
     let enteredSession: Session =
     {
       'roomCode': this.roomNumber,
-      'sessionStart': date.getTime(), //'2019-01-06T17:16:40'
+      'sessionStart': date.toJSON(), //'2019-01-06T17:16:40'
       'userID': this.userID,
       'sessionType': 'Class',
     };

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../data.service';
-import {Report} from '../report';
+import { Report } from '../report';
 
 @Component({
   selector: 'app-reporting',
@@ -28,11 +28,17 @@ export class ReportingComponent implements OnInit {
 
   ngOnInit(): void {
   }
-  
-  GetSessions(){
-    this.dataService.getReport().subscribe((data) => {
+
+  GetSessions() {
+    this.StartDate = new Date(this.StartDate);
+    this.StartDate.setHours(0, 0, 0);
+    this.EndDate = new Date(this.EndDate);
+    this.EndDate.setHours(0, 0, 0);
+
+    this.dataService.getReport(this.userID, this.StartDate.toJSON(), this.EndDate.toJSON()).subscribe((data) => {
       this.reports = data;
       this.days = this.reports.length;
-    })
+    },
+    err => alert(err.error))/*This returns the error if no reports found - use err.error to inform user with message*/ 
   }
 }
