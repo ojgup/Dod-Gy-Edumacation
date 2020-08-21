@@ -59,7 +59,7 @@ namespace DodGyEdumacationAPI.Controllers
 
         // GET: api/DGE/report
         //Returns Reports if found, otherwise NotFoundObjectResult
-        [HttpGet("report"), Authorize]
+        [HttpGet("report")/*, Authorize*/]
         public async Task<ActionResult<IEnumerable<Report>>> GetReport(string userId, DateTime start, DateTime end)
         {
             List<Session> sessions = await _context.Session.Where(r => r.UserId == userId && r.SessionStart >= start && r.SessionEnd <= end).ToListAsync();
