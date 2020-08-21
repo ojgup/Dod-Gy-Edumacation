@@ -14,4 +14,21 @@ export class ReportingTableComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  columnDefs = [
+    { headerName: 'Session Start', field: 'SStart' },
+    { headerName: 'Session End', field: 'SEnd' },
+    { headerName: 'Room', field: 'Room' },
+    { headerName: 'Type', field: 'Type' },
+    { headerName: 'Teacher', field: 'Teacher' }
+  ];
+
+  rowData = [
+    { SStart: '05/01/1974 12:00', SEnd: '05/01/1974 06:00', Room: "DD224", Type: "Class", Teacher: "Boutros Gahli" },
+    { SStart: '05/01/1974 12:00', SEnd: '05/01/1974 06:00', Room: "DD224", Type: "Class", Teacher: "Boutros Gahli" },
+    { SStart: '05/01/1974 12:00', SEnd: '05/01/1974 06:00', Room: "DD224", Type: "Class", Teacher: "Boutros Gahli" },
+    { SStart: '05/01/1974 12:00', SEnd: '05/01/1974 06:00', Room: "DD224", Type: "Class", Teacher: "Boutros Gahli" },
+    { SStart: '05/01/1974 12:00', SEnd: '05/01/1974 06:00', Room: "DD224", Type: "Class", Teacher: "Boutros Gahli" },
+    { SStart: '05/01/1974 12:00', SEnd: '05/01/1974 06:00', Room: "DD224", Type: "Class", Teacher: "Boutros Gahli" }
+  ];
+
 }

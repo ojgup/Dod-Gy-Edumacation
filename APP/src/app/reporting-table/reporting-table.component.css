@@ -1,8 +1,6 @@
-table{
-    border-collapse: collapse;
-    font-size: 30px;
+.grid {
+    width: 1020px;
+    height: 400px;
+    font-weight: 500;
 }
-th,tr,td{
-    border: black 1px solid;
-    padding: 6px;
-}
+

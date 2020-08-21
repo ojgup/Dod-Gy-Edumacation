@@ -64,8 +64,15 @@
     position: absolute;
 
   }
-  #app-reporting-table{
-   left: 35%;
-   margin-top: 60px;
-   position: absolute;
-  }
+ .reporting{
+   display: grid;
+   grid-template: 1fr / 1fr;
+ }
+
+ .days-on-campus{
+   justify-self: center;
+ }
+
+ .report-grid{
+   justify-self: center;
+ }

@@ -13,6 +13,7 @@ import {DataService} from './data.service';
 import { SessionComponent } from './session/session.component';
 import { ReportingComponent } from './reporting/reporting.component';
 import { ReportingTableComponent } from './reporting-table/reporting-table.component';
+import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ReportingTableComponent } from './reporting-table/reporting-table.compo
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AgGridModule.withComponents([])
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

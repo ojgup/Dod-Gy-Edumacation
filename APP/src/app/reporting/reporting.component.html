@@ -1,12 +1,15 @@
 <div class="inputs">
     <app-label class="col-left" labelName="User ID:" labelFor="user-id"></app-label>
     <input class="col-mid user-id" [(ngModel)]="userID" type="text" />
-    <app-label class="col-left" labelName="Start Date:" ></app-label>
-    <input class="col-mid" [(ngModel)]="StartDate"  type="date" />
-    <app-label class="col-left" labelName="End Date:" ></app-label>
-    <input class="col-mid" [(ngModel)]="EndDate"  type="date" />
-    <app-btn-submit id="ReportingSubmitBtn" class="col-mid" (click)="GetSessions()" ></app-btn-submit>
+    <app-label class="col-left" labelName="Start Date:"></app-label>
+    <input class="col-mid" [(ngModel)]="StartDate" type="date" />
+    <app-label class="col-left" labelName="End Date:"></app-label>
+    <input class="col-mid" [(ngModel)]="EndDate" type="date" />
+    <app-btn-submit id="ReportingSubmitBtn" class="col-mid" (click)="GetSessions()"></app-btn-submit>
 </div>
 <hr>
-<app-label id="DaysOnCmpsLbl" labelName="Days on Campus:"></app-label>
-<app-reporting-table id="app-reporting-table"></app-reporting-table>
+
+<div class="reporting">
+    <app-label class="days-on-campus" labelName="Days on Campus:"></app-label>
+    <app-reporting-table class="report-grid"></app-reporting-table>
+</div>
