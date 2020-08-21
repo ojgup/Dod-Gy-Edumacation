@@ -9,8 +9,8 @@
 </div>
 <hr>
 
-<div class="reporting">
-    <app-label class="days-on-campus" labelName="Days on Campus: {{this.days}}" ></app-label>
-    <ag-grid-angular class="grid ag-theme-alpine" [rowData]="reports" [columnDefs]="columnDefs" *ngIf="reports">
+<div class="reporting"  *ngIf="reports">
+    <app-label class="days-on-campus" labelName="Days on Campus: {{this.days}}"></app-label>
+    <ag-grid-angular class="grid ag-theme-alpine report-grid" [rowData]="reports" [columnDefs]="columnDefs">
     </ag-grid-angular>
 </div>
