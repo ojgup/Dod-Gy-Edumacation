@@ -12,7 +12,6 @@ import { BtnSubmitComponent } from './btn-submit/btn-submit.component';
 import {DataService} from './data.service';
 import { SessionComponent } from './session/session.component';
 import { ReportingComponent } from './reporting/reporting.component';
-import { ReportingTableComponent } from './reporting-table/reporting-table.component';
 import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
@@ -23,8 +22,7 @@ import { AgGridModule } from 'ag-grid-angular';
     ButtonBoxComponent,
     BtnSubmitComponent,
     SessionComponent,
-    ReportingComponent,
-    ReportingTableComponent
+    ReportingComponent
   ],
   imports: [
     BrowserModule,

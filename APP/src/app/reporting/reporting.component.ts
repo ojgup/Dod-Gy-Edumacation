@@ -12,6 +12,16 @@ export class ReportingComponent implements OnInit {
   userID: string;
   StartDate: Date;
   EndDate: Date;
+  days: number;
+
+  columnDefs = [
+    { headerName: 'Session Start', field: 'sessionStart' },
+    { headerName: 'Session End', field: 'sessionEnd' },
+    { headerName: 'Room', field: 'roomCode' },
+    { headerName: 'Type', field: 'sessionType' },
+    { headerName: 'Teacher', field: 'teacher' }
+  ];
+
   reports: Array<Report>;
 
   constructor(public dataService: DataService) { }
@@ -22,7 +32,7 @@ export class ReportingComponent implements OnInit {
   GetSessions(){
     this.dataService.getReport().subscribe((data) => {
       this.reports = data;
-      console.log(this.reports);
+      this.days = this.reports.length;
     })
   }
 }
