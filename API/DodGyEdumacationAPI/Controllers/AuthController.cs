@@ -22,7 +22,9 @@ namespace DodGyEdumacationAPI.Controllers
             _context = context;
         }
 
-        // GET api/values
+        // GET api/auth/login
+        // Accepts a Login object - parameters userId (string) and password (string). If the model values match a user login in the database it
+        // returns a JWT, otherwise Unauthorized result
         [HttpGet, Route("login")]
         public IActionResult Login(Login login)
         {
@@ -49,8 +51,8 @@ namespace DodGyEdumacationAPI.Controllers
                 };
 
                 var tokenOptions = new JwtSecurityToken(
-                    issuer: "http://localhost:5001",
-                    audience: "http://localhost:5001",
+                    issuer: Config.GetSection("AppSettings").GetSection("Url").Value,
+                    audience: Config.GetSection("AppSettings").GetSection("Url").Value,
                     claims: claims,
                     expires: DateTime.Now.AddDays(5),
                     signingCredentials: signinCredentials

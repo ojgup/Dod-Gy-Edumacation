@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System;
 using static DodGyEdumacationAPI.Startup;
 
 namespace DodGyEdumacationAPI.JWT
@@ -18,12 +19,13 @@ namespace DodGyEdumacationAPI.JWT
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
+                    ClockSkew = TimeSpan.Zero,
                     ValidateIssuer = true,
                     ValidateAudience = true,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    ValidIssuer = "http://localhost:5001",
-                    ValidAudience = "http://localhost:5001",
+                    ValidIssuer = Config.GetSection("AppSettings").GetSection("Url").Value,
+                    ValidAudience = Config.GetSection("AppSettings").GetSection("Url").Value,
                     IssuerSigningKey = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(Config.GetSection("AppSettings").GetSection("Secret").Value))
                 };
             });
