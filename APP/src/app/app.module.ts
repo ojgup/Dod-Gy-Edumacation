@@ -38,7 +38,8 @@ export function tokenGetter() {
     AgGridModule.withComponents([]),
     JwtModule.forRoot({
       config: {
-        tokenGetter: tokenGetter
+        tokenGetter: tokenGetter,
+        allowedDomains: ["https://localhost:5001/"]
       }
     })
   ],

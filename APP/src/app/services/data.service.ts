@@ -20,8 +20,6 @@ export class DataService {
       this.user = <User>user;
       console.log(user);
     });
-
-    
   }
 
   postSession(sessionEntered: Session){
