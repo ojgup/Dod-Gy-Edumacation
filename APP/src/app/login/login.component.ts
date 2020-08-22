@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import {AuthService} from '../auth.service';
+import {AuthService} from '../services/auth.service';
 import {Login} from '../login';
-import { DataService } from '../data.service';
+import { DataService } from '../services/data.service';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +10,6 @@ import { DataService } from '../data.service';
 })
 export class LoginComponent implements OnInit {
 
-  //form: FormGroup;
   userId: string;
   password: string;
 

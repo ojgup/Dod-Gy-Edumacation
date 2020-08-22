@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import {Session} from './session';
-import {User} from './user';
-import {Report} from './report';
-import { UserComponentFactory } from 'ag-grid-community';
+import {Session} from '../session';
+import {User} from '../user';
+import {Report} from '../report';
 
 @Injectable({
   providedIn: 'root'
