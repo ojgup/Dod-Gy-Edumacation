@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import {AuthService} from '../auth.service';
 import {Login} from '../login';
+import { DataService } from '../data.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,7 @@ export class LoginComponent implements OnInit {
   userId: string;
   password: string;
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private dataService: DataService) { }
 
   ngOnInit(): void {
   }
@@ -24,6 +25,13 @@ export class LoginComponent implements OnInit {
       "userId": this.userId,
       "password": this.password
     } 
+
     this.authService.login(details);
+
+    if(this.authService.loggedIn){
+      this.dataService.getUser(details['userId']);
+    }     
+    else
+      this.dataService.user = null;  
   }
 }

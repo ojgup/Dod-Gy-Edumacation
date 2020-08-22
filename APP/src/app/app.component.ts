@@ -12,10 +12,10 @@ export class AppComponent {
   isLoggedIn: boolean;
 
   constructor(private authService: AuthService){
-    /*this.authService.loggedIn.subscribe(state => {
+    this.authService.loggedIn.subscribe(state => {
       this.isLoggedIn = state;
       console.log("Logged in: " + this.isLoggedIn);
-    })*/
+    })
   }
 
   logout(){

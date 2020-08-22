@@ -10,7 +10,9 @@ export class AuthService {
 
   @Output() loggedIn: EventEmitter<boolean>;
 
-  constructor(private _http: HttpClient, private jwtHelper: JwtHelperService) { }
+  constructor(private _http: HttpClient, private jwtHelper: JwtHelperService) { 
+    this.loggedIn = new EventEmitter();
+  }
 
   login(details: Login){
     console.log(details);
