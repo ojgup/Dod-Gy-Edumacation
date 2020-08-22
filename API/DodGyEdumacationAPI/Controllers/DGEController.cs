@@ -38,7 +38,7 @@ namespace DodGyEdumacationAPI.Controllers
 
         // GET: api/DGE/user/{userId}
         // Return User if found, otherwise nothing
-        [HttpGet("user/{userId}"), Authorize]
+        [HttpGet("user/{userId}")/*, Authorize*/]
         public async Task<ActionResult<IEnumerable<User>>> GetUser(string userId)
         {
             var user = await _context.User.Where(u => u.Userid == userId).Select(u =>
@@ -99,7 +99,7 @@ namespace DodGyEdumacationAPI.Controllers
 
         // POST: api/DGE/start
         //Returns an OK result if insert Session successful 
-        [HttpPost("start"), Authorize]
+        [HttpPost("start")/*, Authorize*/]
         public async Task<IActionResult> SessionStart(Session session)
         {
             try
