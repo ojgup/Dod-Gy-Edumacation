@@ -49,9 +49,9 @@ namespace DodGyEdumacationAPI.Controllers
                 LastName = u.LastName,
                 UserType = u.UserType
             }
-            ).ToListAsync();
+            ).SingleAsync();
 
-            if (user.Count() != 0)
+            if (user != null)
                 return Ok(user);
             else
                 return NotFound("User not found");
