@@ -17,8 +17,11 @@ export class DataService {
 
   getUser(userId: string) {
     return this._http.get<User>(this.apiURL + "/DGE/user/" + userId).subscribe((user) => {
-      this.user = user;
+      this.user = <User>user;
+      console.log(user);
     });
+
+    
   }
 
   postSession(sessionEntered: Session){

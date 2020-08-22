@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Report } from '../report';
+import { User } from '../user';
 
 @Component({
   selector: 'app-reporting',
@@ -23,10 +24,18 @@ export class ReportingComponent implements OnInit {
   ];
 
   reports: Array<Report>;
+  user: User;
+  disableUserId: boolean;
 
   constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
+    this.user = this.dataService.user;
+    if (this.user.userType != "Staff") {
+      this.disableUserId = true;
+      this.userID = this.user.userid;
+    }
+
   }
 
   GetSessions() {
@@ -39,6 +48,6 @@ export class ReportingComponent implements OnInit {
       this.reports = data;
       this.days = this.reports.length;
     },
-    err => alert(err.error))/*This returns the error if no reports found - use err.error to inform user with message*/ 
+      err => alert(err.error))/*This returns the error if no reports found - use err.error to inform user with message*/
   }
 }

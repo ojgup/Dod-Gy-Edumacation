@@ -1,6 +1,6 @@
 <div class="inputs">
     <app-label class="col-left" labelName="User ID:" labelFor="user-id"></app-label>
-    <input class="col-mid user-id" [(ngModel)]="userID" type="text" />
+    <input [disabled]="this.disableUserId" class="col-mid user-id" [(ngModel)]="this.userID" type="text" />
     <app-label class="col-left" labelName="Start Date:"></app-label>
     <input class="col-mid" [(ngModel)]="StartDate" type="date" />
     <app-label class="col-left" labelName="End Date:"></app-label>

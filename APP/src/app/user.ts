@@ -1,7 +1,8 @@
 export interface User {
-    userId: string;
+    userid: string;
     password: string;
     firstName: string;
     lastName: string;
-    userType: string;   
+    userType: string;
+    session: any
 }
