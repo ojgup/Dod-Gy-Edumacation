@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Session} from '../session';
 import {User} from '../user';
 import {Report} from '../report';
@@ -16,9 +16,11 @@ export class DataService {
   constructor(private _http: HttpClient) { }
 
   getUser(userId: string) {
-    return this._http.get<User>(this.apiURL + "/DGE/user/" + userId).subscribe((user) => {
+    //let headers = new HttpHeaders();
+    //headers.append('Authorization', 'Bearers ' + JSON.stringify(localStorage.getItem('Authorization')));
+    return this._http.get<User>(this.apiURL + "/DGE/user/" + userId/*, {headers: headers}*/).subscribe((user) => {
       this.user = <User>user;
-      console.log(user);
+      console.log(this.user);
     });
   }
 
