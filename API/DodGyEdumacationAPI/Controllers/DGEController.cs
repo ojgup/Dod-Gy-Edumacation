@@ -38,9 +38,16 @@ namespace DodGyEdumacationAPI.Controllers
 
         // GET: api/DGE/user/{userId}
         // Return User if found, otherwise nothing
-        [HttpGet("user/{userId}")/*, Authorize*/]
+        [HttpGet("user/{userId}"), Authorize]
         public async Task<ActionResult<IEnumerable<User>>> GetUser(string userId)
         {
+            var re = Request;
+            var headers = re.Headers;
+            foreach (var head in headers)
+            {
+                Console.WriteLine(head);
+            }
+
             var user = await _context.User.Where(u => u.Userid == userId).Select(u =>
             new User
             {
