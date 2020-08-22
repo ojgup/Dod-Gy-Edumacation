@@ -13,6 +13,12 @@ import {DataService} from './data.service';
 import { SessionComponent } from './session/session.component';
 import { ReportingComponent } from './reporting/reporting.component';
 import { AgGridModule } from 'ag-grid-angular';
+import { LoginComponent } from './login/login.component';
+import {JwtModule} from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem('Authorization');
+}
 
 @NgModule({
   declarations: [
@@ -22,14 +28,20 @@ import { AgGridModule } from 'ag-grid-angular';
     ButtonBoxComponent,
     BtnSubmitComponent,
     SessionComponent,
-    ReportingComponent
+    ReportingComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     HttpClientModule,
     FormsModule,
-    AgGridModule.withComponents([])
+    AgGridModule.withComponents([]),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter
+      }
+    })
   ],
   providers: [DataService],
   bootstrap: [AppComponent]
