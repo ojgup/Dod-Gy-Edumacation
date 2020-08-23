@@ -32,14 +32,14 @@ export class SessionComponent implements OnInit {
     //Must check session type and validate all inputs
     //Check date format being sent correctly
 
-    let now: Date = new Date();
+    /*let now: Date = new Date();
     now.setSeconds(0);
-    now.setMilliseconds(0);
+    now.setMilliseconds(0);*/
 
     let date: Date = new Date();
-    date.setHours(this.hourEntered, this.minutesEntered, 0, 0);
+    date.setHours(this.hourEntered + 10, this.minutesEntered, 0, 0);
 
-    let diff: number = date.getTime() - now.getTime();
+    //let diff: number = date.getTime() - now.getTime();
 
 /*     if (now.getHours() < 6 && diff >= 18*60*60*1000) {
       console.log('yesterday');
@@ -55,15 +55,21 @@ export class SessionComponent implements OnInit {
       return;
     } */
 
-    let enteredSession: Session =
-    {
-      'roomCode': this.roomNumber,
-      'sessionStart': date.toJSON(), //'2019-01-06T17:16:40'
-      'userID': this.userID,
-      'sessionType': 'Class',
-    };
-
-    this.dataService.postStartSession(enteredSession);
+    if(this.session == null){
+      let enteredSession: Session =
+      {
+        'roomCode': this.roomNumber,
+        'sessionStart': date.toJSON(),
+        'userID': this.userID,
+        'sessionType': 'Class',
+      };
+  
+      this.dataService.postStartSession(enteredSession);
+    }
+    else{
+      this.session.sessionEnd = date.toJSON();
+      console.log(this.session);
+      this.dataService.postEndSession(this.session);
+    }
   }
-
 }

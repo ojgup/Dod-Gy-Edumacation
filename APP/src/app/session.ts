@@ -1,7 +1,8 @@
 export class Session {
-    roomCode: string;
-    sessionStart: any;
+    sessionId?: number;
+    roomCode?: string;
+    sessionStart?: any;
     sessionEnd?: any;
-    userID: string;
-    sessionType: string;
+    userID?: string;
+    sessionType?: string;
 }

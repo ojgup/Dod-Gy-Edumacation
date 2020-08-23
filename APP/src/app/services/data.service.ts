@@ -37,6 +37,10 @@ export class DataService {
     this._http.post(this.apiURL + "/DGE/start", sessionEntered).subscribe();
   }
 
+  postEndSession(sessionEnd: Session){
+    this._http.put(this.apiURL + "/DGE/end", sessionEnd).subscribe();
+  }
+
   getReport(userId: string, start: string, end: string){
     var url = this.apiURL + "/DGE/report?" + "userId=" + 
     userId + "&start=" + start + "&end=" + end;
