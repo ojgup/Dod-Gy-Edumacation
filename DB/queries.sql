@@ -1,4 +1,4 @@
-/*DBCC CHECKIDENT([Session], RESEED, 2)
+/*DBCC CHECKIDENT([Session], RESEED, 10)
 DELETE FROM [Session] WHERE sessionId = 3
 SELECT * FROM SESSION
 SELECT [Session].*, [User].userType FROM [SESSION] INNER JOIN [User] ON [User].userId = [Session].userId 

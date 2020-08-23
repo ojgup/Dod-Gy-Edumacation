@@ -28,7 +28,7 @@ namespace DodGyEdumacationAPI.Controllers
         public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId)
         {
             var session =  await _context.Session.Where(s => s.UserId == userId && s.SessionEnd ==
-            null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear).SingleAsync();
+            null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear).SingleOrDefaultAsync();
 
             if (session != null)
                 return Ok(session);
@@ -56,7 +56,7 @@ namespace DodGyEdumacationAPI.Controllers
                 LastName = u.LastName,
                 UserType = u.UserType
             }
-            ).SingleAsync();
+            ).SingleOrDefaultAsync();
 
             if (user != null)
                 return Ok(user);
@@ -66,7 +66,7 @@ namespace DodGyEdumacationAPI.Controllers
 
         // GET: api/DGE/report
         //Returns Reports if found, otherwise NotFoundObjectResult
-        [HttpGet("report")/*, Authorize*/]
+        [HttpGet("report"), Authorize]
         public async Task<ActionResult<IEnumerable<Report>>> GetReport(string userId, DateTime start, DateTime end)
         {
             List<Session> sessions = await _context.Session.Where(r => r.UserId == userId && r.SessionStart >= start && r.SessionEnd <= end).ToListAsync();
