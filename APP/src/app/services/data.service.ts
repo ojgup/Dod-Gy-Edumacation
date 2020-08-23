@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Session } from '../session';
 import { User } from '../user';
 import { Report } from '../report';
-import { UserComponentFactory } from 'ag-grid-community';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +33,11 @@ export class DataService {
   }
 
   postStartSession(sessionEntered: Session) {
-    this._http.post(this.apiURL + "/DGE/start", sessionEntered).subscribe();
+    this._http.post(this.apiURL + "/DGE/start", sessionEntered).subscribe(
+      res => console.log('HTTP response', res),
+      err => console.log('HTTP error', err.error.text),
+      () => console.log('HTTP request completed')
+    );
     alert("Session STarted");
   }
 
