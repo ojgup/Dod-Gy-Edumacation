@@ -25,7 +25,6 @@ export class SessionComponent implements OnInit {
   ngOnInit(): void {
     this.session = this.dataService.session;
     
-    console.log("Session Comp " + this.session.sessionStart);
   }
 
   sessionEntered() {
