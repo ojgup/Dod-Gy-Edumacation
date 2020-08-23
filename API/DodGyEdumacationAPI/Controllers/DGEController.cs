@@ -28,9 +28,9 @@ namespace DodGyEdumacationAPI.Controllers
         public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId)
         {
             var session =  await _context.Session.Where(s => s.UserId == userId && s.SessionEnd ==
-            null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear).ToListAsync();
+            null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear).SingleAsync();
 
-            if (session.Count() != 0)
+            if (session != null)
                 return Ok(session);
             else
                 return NotFound("No open sessions found");
@@ -106,9 +106,11 @@ namespace DodGyEdumacationAPI.Controllers
 
         // POST: api/DGE/start
         //Returns an OK result if insert Session successful 
-        [HttpPost("start")/*, Authorize*/]
+        [HttpPost("start"), Authorize]
         public async Task<IActionResult> SessionStart(Session session)
         {
+            Console.WriteLine("PostMethod Called");
+
             try
             {
                 Session record = FindOpenSession(session);
@@ -118,6 +120,7 @@ namespace DodGyEdumacationAPI.Controllers
                     _context.Session.Add(session);
                     await _context.SaveChangesAsync();
 
+                    Console.WriteLine("Sesson Started");
                     return Ok();
                 }
                 else
