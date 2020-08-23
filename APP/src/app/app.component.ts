@@ -17,6 +17,7 @@ export class AppComponent {
       this.isLoggedIn = state;
       if(this.isLoggedIn){
           this.dataService.getUser(this.dataService.userId);
+          this.dataService.getOpenSession(this.dataService.userId);
         }     
         else
           this.dataService.user = null;  

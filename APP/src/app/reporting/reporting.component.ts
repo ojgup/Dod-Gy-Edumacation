@@ -30,7 +30,10 @@ export class ReportingComponent implements OnInit {
   constructor(public dataService: DataService) { }
 
   ngOnInit(): void {
+    console.log("Report OnInIt");
+    
     this.user = this.dataService.user;
+    console.log(this.user.userType);
     if (this.user.userType != "Staff") {
       this.disableUserId = true;
       this.userID = this.user.userid;

@@ -20,7 +20,12 @@ export class SessionComponent implements OnInit {
 
   constructor(private dataService: DataService) { }
 
+  session: Session;
+
   ngOnInit(): void {
+    this.session = this.dataService.session;
+    
+    console.log("Session Comp " + this.session.sessionStart);
   }
 
   sessionEntered() {
@@ -37,7 +42,7 @@ export class SessionComponent implements OnInit {
 
     let diff: number = date.getTime() - now.getTime();
 
-    if (now.getHours() < 6 && diff >= 18*60*60*1000) {
+/*     if (now.getHours() < 6 && diff >= 18*60*60*1000) {
       console.log('yesterday');
       date.setTime(date.getTime() - 24*60*60*1000);
       diff -= 24*60*60*1000;
@@ -49,7 +54,7 @@ export class SessionComponent implements OnInit {
     else if (diff > 0) {
       alert('try logging it when you have left');
       return;
-    }
+    } */
 
     let enteredSession: Session =
     {
@@ -59,7 +64,7 @@ export class SessionComponent implements OnInit {
       'sessionType': 'Class',
     };
 
-    this.dataService.postSession(enteredSession);
+    this.dataService.postStartSession(enteredSession);
   }
 
 }

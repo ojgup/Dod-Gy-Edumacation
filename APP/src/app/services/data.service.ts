@@ -13,22 +13,28 @@ export class DataService {
 
   user: User;
   userId: string;
+  session: Session;
   apiURL = "https://localhost:5001/api";
 
   constructor(private _http: HttpClient) { 
   }
 
   getUser(userId: string) {
-    //let headers = new HttpHeaders();
-    //headers.append('Authorization', 'Bearers ' + JSON.stringify(localStorage.getItem('Authorization')));
-    return this._http.get<User>(this.apiURL + "/DGE/user/" + userId/*, {headers: headers}*/).subscribe((user) => {
+    return this._http.get<User>(this.apiURL + "/DGE/user/" + userId).subscribe((user) => {
       this.user = <User>user;
-      console.log(this.user);
+      this.userId = user.userid;
     });
   }
 
-  postSession(sessionEntered: Session){
-    this._http.post(this.apiURL + "/DGE/start", sessionEntered);
+  getOpenSession(userId: string){
+    return this._http.get<Session>(this.apiURL + "/DGE/open/" + userId).subscribe((session) => {
+      this.session = <Session>session;
+      console.log(this.session);
+    });
+  }
+
+  postStartSession(sessionEntered: Session){
+    this._http.post(this.apiURL + "/DGE/start", sessionEntered).subscribe();
   }
 
   getReport(userId: string, start: string, end: string){

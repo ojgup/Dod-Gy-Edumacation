@@ -7,23 +7,16 @@
 
   <app-button-box class="col-right"></app-button-box>
 
+<!--   <app-label *ngIf="this.session == null" class="col-left" labelName="Start Date:"></app-label>
+  <input *ngIf="this.session == null" class="col-mid" [(ngModel)]="StartDate" type="date" />
+  <app-label *ngIf="this.session == null" class="col-left" labelName="End Date:"></app-label>
+  <input *ngIf="this.session == null" class="col-mid" [(ngModel)]="EndDate" type="date" /> -->
+
   <app-label class="col-left" labelName="Time Entered:" labelFor="time-entered"></app-label>
 
-  <input
-    class="col-mid-left time"
-    [(ngModel)]="hourEntered"
-    type="number"
-    min="0"
-    max="23"
-  />
+  <input class="col-mid-left time" [(ngModel)]="hourEntered" type="number" min="0" max="23" />
   <div class="col-mid-mid">:</div>
-  <input
-    class="col-mid-right time"
-    [(ngModel)]="minutesEntered"
-    type="number"
-    min="0"
-    max="59"
-  />
+  <input class="col-mid-right time" [(ngModel)]="minutesEntered" type="number" min="0" max="59" />
 
   <app-btn-submit class="col-mid" (click)="sessionEntered()"></app-btn-submit>
 </div>
