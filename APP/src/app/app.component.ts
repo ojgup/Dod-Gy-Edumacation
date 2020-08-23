@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import {AuthService} from './services/auth.service';
+import { DataService } from './services/data.service';
 
 @Component({
   selector: 'app-root',
@@ -11,11 +12,16 @@ export class AppComponent {
 
   isLoggedIn: boolean;
 
-  constructor(private authService: AuthService){
+  constructor(private authService: AuthService, private dataService: DataService){
     this.authService.loggedIn.subscribe(state => {
       this.isLoggedIn = state;
-      console.log("Logged in: " + this.isLoggedIn);
-    })
+      if(this.isLoggedIn){
+          this.dataService.getUser(this.dataService.userId);
+        }     
+        else
+          this.dataService.user = null;  
+      }
+    );
   }
 
   logout(){

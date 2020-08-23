@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {AuthService} from '../services/auth.service';
 import {Login} from '../login';
 import { DataService } from '../services/data.service';
+import {User} from '../user';
 
 @Component({
   selector: 'app-login',
@@ -25,11 +26,6 @@ export class LoginComponent implements OnInit {
     } 
 
     this.authService.login(details);
-
-    if(this.authService.loggedIn){
-      this.dataService.getUser(details['userId']);
-    }     
-    else
-      this.dataService.user = null;  
+    this.dataService.userId = this.userId;
   }
 }

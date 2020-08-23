@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Session} from '../session';
 import {User} from '../user';
 import {Report} from '../report';
+import { UserComponentFactory } from 'ag-grid-community';
 
 @Injectable({
   providedIn: 'root'
@@ -11,9 +12,11 @@ import {Report} from '../report';
 export class DataService {
 
   user: User;
+  userId: string;
   apiURL = "https://localhost:5001/api";
 
-  constructor(private _http: HttpClient) { }
+  constructor(private _http: HttpClient) { 
+  }
 
   getUser(userId: string) {
     //let headers = new HttpHeaders();
