@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import {Session} from '../session';
-import {User} from '../user';
-import {Report} from '../report';
+import { Session } from '../session';
+import { User } from '../user';
+import { Report } from '../report';
 import { UserComponentFactory } from 'ag-grid-community';
 
 @Injectable({
@@ -16,7 +16,7 @@ export class DataService {
   session: Session;
   apiURL = "https://localhost:5001/api";
 
-  constructor(private _http: HttpClient) { 
+  constructor(private _http: HttpClient) {
   }
 
   getUser(userId: string) {
@@ -26,24 +26,26 @@ export class DataService {
     });
   }
 
-  getOpenSession(userId: string){
+  getOpenSession(userId: string) {
     return this._http.get<Session>(this.apiURL + "/DGE/open/" + userId).subscribe((session) => {
       this.session = <Session>session;
       console.log(this.session);
     });
   }
 
-  postStartSession(sessionEntered: Session){
+  postStartSession(sessionEntered: Session) {
     this._http.post(this.apiURL + "/DGE/start", sessionEntered).subscribe();
+    alert("Session STarted");
   }
 
-  postEndSession(sessionEnd: Session){
+  postEndSession(sessionEnd: Session) {
     this._http.put(this.apiURL + "/DGE/end", sessionEnd).subscribe();
+    alert("Session Ended");
   }
 
-  getReport(userId: string, start: string, end: string){
-    var url = this.apiURL + "/DGE/report?" + "userId=" + 
-    userId + "&start=" + start + "&end=" + end;
+  getReport(userId: string, start: string, end: string) {
+    var url = this.apiURL + "/DGE/report?" + "userId=" +
+      userId + "&start=" + start + "&end=" + end;
     return this._http.get<Array<Report>>(url);
   }
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Session } from '../session';
+import { User } from '../user';
 
 @Component({
   selector: 'app-session',
@@ -21,10 +22,15 @@ export class SessionComponent implements OnInit {
   constructor(private dataService: DataService) { }
 
   session: Session;
+  user: User;
 
   ngOnInit(): void {
     this.session = this.dataService.session;
-    
+    this.user = this.dataService.user;
+    this.userID = this.user.userid;
+    if (this.session != null)
+      this.roomNumber = this.session.roomCode;
+
   }
 
   sessionEntered() {
@@ -41,21 +47,22 @@ export class SessionComponent implements OnInit {
 
     //let diff: number = date.getTime() - now.getTime();
 
-/*     if (now.getHours() < 6 && diff >= 18*60*60*1000) {
-      console.log('yesterday');
-      date.setTime(date.getTime() - 24*60*60*1000);
-      diff -= 24*60*60*1000;
-    }
-    if (diff < -6*60*60*1000) {
-      console.log('too long ago');
-      return;
-    }
-    else if (diff > 0) {
-      alert('try logging it when you have left');
-      return;
-    } */
+    /*     if (now.getHours() < 6 && diff >= 18*60*60*1000) {
+          console.log('yesterday');
+          date.setTime(date.getTime() - 24*60*60*1000);
+          diff -= 24*60*60*1000;
+        }
+        if (diff < -6*60*60*1000) {
+          console.log('too long ago');
+          return;
+        }
+        else if (diff > 0) {
+          alert('try logging it when you have left');
+          return;
+        } */
 
-    if(this.session == null){
+    //start session
+    if (this.session == null) {
       let enteredSession: Session =
       {
         'roomCode': this.roomNumber,
@@ -63,10 +70,11 @@ export class SessionComponent implements OnInit {
         'userID': this.userID,
         'sessionType': 'Class',
       };
-  
+
       this.dataService.postStartSession(enteredSession);
     }
-    else{
+    //end session
+    else {
       this.session.sessionEnd = date.toJSON();
       console.log(this.session);
       this.dataService.postEndSession(this.session);
