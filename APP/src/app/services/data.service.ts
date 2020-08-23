@@ -33,10 +33,11 @@ export class DataService {
   }
 
   postStartSession(sessionEntered: Session) {
-    this._http.post(this.apiURL + "/DGE/start", sessionEntered).subscribe(
-      res => console.log('HTTP response', res),
+    this._http.post(this.apiURL + "/DGE/start", sessionEntered, {responseType: 'text'}).subscribe(
+      res => console.log(res)
+      /*res => console.log('HTTP response', res),
       err => console.log('HTTP error', err.error.text),
-      () => console.log('HTTP request completed')
+      () => console.log('HTTP request completed')*/
     );
     alert("Session STarted");
   }
