@@ -1,0 +1,16 @@
+<div class="inputs">
+    <app-label class="col-left" labelName="User ID:" labelFor="user-id"></app-label>
+    <input [disabled]="this.disableUserId" class="col-mid user-id" [(ngModel)]="this.userID" type="text" />
+    <app-label class="col-left" labelName="Start Date:"></app-label>
+    <input class="col-mid" [(ngModel)]="StartDate" type="date" />
+    <app-label class="col-left" labelName="End Date:"></app-label>
+    <input class="col-mid" [(ngModel)]="EndDate" type="date" />
+    <app-btn-submit id="ReportingSubmitBtn" class="col-mid" (click)="GetSessions()"></app-btn-submit>
+</div>
+<hr>
+
+<div class="reporting"  *ngIf="reports">
+    <app-label class="days-on-campus" labelName="Days on Campus: {{this.days}}"></app-label>
+    <ag-grid-angular class="grid ag-theme-alpine report-grid" [rowData]="reports" [columnDefs]="columnDefs">
+    </ag-grid-angular>
+</div>

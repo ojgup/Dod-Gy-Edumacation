@@ -13,10 +13,8 @@ export class DataService {
   user: User;
   userId: string;
   session: Session;
-  apiURL = "https://localhost:5001/api";
   sessionType: string;
-
-  userType: string;
+  apiURL = "https://localhost:5001/api";
 
   constructor(private _http: HttpClient) {
   }

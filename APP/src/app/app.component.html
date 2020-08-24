@@ -1,0 +1,19 @@
+<header>
+  <div class="container">
+    <div class="logo">
+      <a routerLink="" style="text-decoration:none"><h1 class="main-heading">DOD&GY EDUMACATION</h1>
+      <p class="sub-heading">COVID-19 Contact Tracer</p></a>
+    </div>
+
+    <nav>
+      <ul>
+        <li><a (click)="getSession()" routerLink="/session" class="nav-link" href="#">Session</a></li>
+        <li><a routerLink="/reporting" class="nav-link" href="#">Reporting</a></li>
+        <li><a routerLink="/login" class="nav-link" *ngIf="!isLoggedIn" href="#">Login</a></li>
+        <li><a routerLink="/" class="nav-link" href="#" (click)="logout()" *ngIf="isLoggedIn">Logout</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<router-outlet></router-outlet>
