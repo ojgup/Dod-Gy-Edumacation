@@ -28,7 +28,7 @@ namespace DodGyEdumacationAPI.Controllers
         public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId)
         {
             var session =  await _context.Session.Where(s => s.UserId == userId && s.SessionEnd ==
-            null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear).SingleOrDefaultAsync();
+            null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear).FirstOrDefaultAsync();
 
             if (session != null)
                 return Ok(session);
@@ -56,7 +56,7 @@ namespace DodGyEdumacationAPI.Controllers
                 LastName = u.LastName,
                 UserType = u.UserType
             }
-            ).SingleOrDefaultAsync();
+            ).FirstOrDefaultAsync();
 
             if (user != null)
                 return Ok(user);
@@ -121,7 +121,7 @@ namespace DodGyEdumacationAPI.Controllers
                     await _context.SaveChangesAsync();
 
                     Console.WriteLine("Sesson Started");
-                    return Ok();
+                    return Ok("Session successfully entered");
                 }
                 else
                     return NotFound("Could not find an open session in the database with the information sent.");
@@ -168,7 +168,7 @@ namespace DodGyEdumacationAPI.Controllers
         //Checks Session in database and returns an open Session
         private Session FindOpenSession(Session session)
         {
-            Session record = (from s in _context.Session where s.SessionId == session.SessionId && s.SessionEnd == null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear select s).SingleOrDefault();
+            Session record = (from s in _context.Session where s.SessionId == session.SessionId && s.SessionEnd == null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear select s).FirstOrDefault();
             return record;
         }
 
