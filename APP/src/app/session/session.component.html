@@ -5,7 +5,10 @@
   <app-label class="col-left" labelName="Room:" labelFor="room"></app-label>
   <input [disabled]="this.session != null" class="col-mid room" [(ngModel)]="roomNumber" name="room" type="text" />
 
-  <app-button-box class="col-right"></app-button-box>
+  <div class="button-box">
+    <button class="btn class-btn" id="ClassButton" (click)="ClassButtonClicked()" type="button">Class</button>
+    <button class="btn office-btn" id="OfficeButton" (click)="OfficeButtonClicked()" type="button">Office</button>
+  </div>
 
   <app-label *ngIf="this.session == null" class="col-left" labelName="Time Entered:" labelFor="time-entered"></app-label>
   <app-label *ngIf="this.session" class="col-left" labelName="Time Left:" labelFor="time-entered"></app-label>

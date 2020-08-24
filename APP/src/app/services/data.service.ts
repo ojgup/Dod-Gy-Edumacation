@@ -14,6 +14,9 @@ export class DataService {
   userId: string;
   session: Session;
   apiURL = "https://localhost:5001/api";
+  sessionType: string;
+
+  userType: string;
 
   constructor(private _http: HttpClient) {
   }

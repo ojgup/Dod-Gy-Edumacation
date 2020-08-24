@@ -25,13 +25,39 @@ export class SessionComponent implements OnInit {
   user: User;
 
   ngOnInit(): void {
+    this.ClassButtonClicked(); 
+
     this.session = this.dataService.session;
     this.user = this.dataService.user;
     this.userID = this.user.userid;
     if (this.session != null)
       this.roomNumber = this.session.roomCode;
 
+    console.log(this.dataService.session.roomCode);
   }
+
+  
+  ClassButtonClicked() {
+    let Classbtn = document.getElementById("ClassButton");
+    let OfficeBtn = document.getElementById("OfficeButton");
+    Classbtn.style.backgroundColor = "#D1345B";
+    OfficeBtn.style.backgroundColor = "#d1cbcb";
+    OfficeBtn.style.color = "white";
+    Classbtn.style.color = "white";
+
+    this.dataService.sessionType = "Class";
+  }
+  OfficeButtonClicked(){
+    let Classbtn = document.getElementById("ClassButton");
+    let OfficeBtn = document.getElementById("OfficeButton");
+    Classbtn.style.backgroundColor = "#d1cbcb";
+    Classbtn.style.color = "white";
+    OfficeBtn.style.backgroundColor = "#3454D1";
+    OfficeBtn.style.color = "white";
+
+    this.dataService.sessionType = "Office";
+  }
+
 
   sessionEntered() {
     /*Input fields should be type='number' with min and max attributes limiting user input*/
@@ -68,7 +94,7 @@ export class SessionComponent implements OnInit {
         'roomCode': this.roomNumber,
         'sessionStart': date.toJSON(),
         'userID': this.userID,
-        'sessionType': 'Class',
+        'sessionType': this.dataService.sessionType
       };
 
       this.dataService.postStartSession(enteredSession);
