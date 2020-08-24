@@ -30,10 +30,10 @@ export class SessionComponent implements OnInit {
     this.session = this.dataService.session;
     this.user = this.dataService.user;
     this.userID = this.user.userid;
+    console.log(this.session.roomCode);
     if (this.session != null)
       this.roomNumber = this.session.roomCode;
 
-    console.log(this.dataService.session.roomCode);
   }
 
   
