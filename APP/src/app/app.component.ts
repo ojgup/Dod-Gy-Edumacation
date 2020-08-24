@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AuthService } from './services/auth.service';
+import { DataService } from './services/data.service';
 
 @Component({
   selector: 'app-root',
@@ -8,8 +10,32 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'Dod&gy Edumacation | COVID-19 Contact Tracer';
 
+  isLoggedIn: boolean;
 
-  navlinkClicked(buttonName:String){
-    
+  constructor(private authService: AuthService, private dataService: DataService) {
+    this.authService.loggedIn.subscribe(state => {
+      this.isLoggedIn = state;
+      if (this.isLoggedIn) {
+        this.dataService.getUser(this.dataService.userId);
+        //if (this.dataService.session == null)
+          this.getSession();
+      }
+      else
+        this.dataService.user = null;
+    }
+    );
+  }
+
+  getSession() {
+    if (this.authService.loggedIn)
+      this.dataService.getOpenSession(this.dataService.userId);
+  }
+
+  logout() {
+    this.authService.logout();
+  }
+
+  navlinkClicked(buttonName: String) {
+
   }
 }

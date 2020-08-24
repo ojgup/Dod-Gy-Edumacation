@@ -1,29 +1,21 @@
 <div class="inputs">
   <app-label class="col-left" labelName="User ID:" labelFor="user-id"></app-label>
-  <input class="col-mid user-id" [(ngModel)]="userID" name="user-id" type="text" />
+  <input [disabled]="this.session != null" class="col-mid user-id" [(ngModel)]="userID" name="user-id" type="text" />
 
   <app-label class="col-left" labelName="Room:" labelFor="room"></app-label>
-  <input class="col-mid room" [(ngModel)]="roomNumber" name="room" type="text" />
+  <input [disabled]="this.session != null" class="col-mid room" [(ngModel)]="roomNumber" name="room" type="text" />
 
-  <app-button-box class="col-right"></app-button-box>
+  <div class="button-box">
+    <button class="btn class-btn" id="ClassButton" (click)="ClassButtonClicked()" type="button">Class</button>
+    <button class="btn office-btn" id="OfficeButton" (click)="OfficeButtonClicked()" type="button">Office</button>
+  </div>
 
-  <app-label class="col-left" labelName="Time Entered:" labelFor="time-entered"></app-label>
+  <app-label *ngIf="this.session == null" class="col-left" labelName="Time Entered:" labelFor="time-entered"></app-label>
+  <app-label *ngIf="this.session" class="col-left" labelName="Time Left:" labelFor="time-entered"></app-label>
 
-  <input
-    class="col-mid-left time"
-    [(ngModel)]="hourEntered"
-    type="number"
-    min="0"
-    max="23"
-  />
+  <input class="col-mid-left time" [(ngModel)]="hourEntered" type="number" min="0" max="23" />
   <div class="col-mid-mid">:</div>
-  <input
-    class="col-mid-right time"
-    [(ngModel)]="minutesEntered"
-    type="number"
-    min="0"
-    max="59"
-  />
+  <input class="col-mid-right time" [(ngModel)]="minutesEntered" type="number" min="0" max="59" />
 
   <app-btn-submit class="col-mid" (click)="sessionEntered()"></app-btn-submit>
 </div>
