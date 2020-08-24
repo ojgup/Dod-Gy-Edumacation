@@ -4,6 +4,9 @@ SELECT * FROM SESSION
 SELECT [Session].*, [User].userType FROM [SESSION] INNER JOIN [User] ON [User].userId = [Session].userId 
 SELECT * FROM [User]
 */
+
+/*DELETE FROM [Session] WHERE sessionId > 10*/
+
 /*UPDATE [Session] SET sessionEnd = GETDATE() WHERE sessionId = 1
 /*EXEC START_SESSION @ROOMCODE = 'GD224', @SESSIONSTART = '2021-01-06 17:16:40.000', @SESSIONTYPE ='Class', @USERID = '103043778';
 USE Master
@@ -24,8 +27,6 @@ SELECT * FROM [Session] INNER JOIN [User] ON [User].userId
 
 /*EXEC GET_REPORT @SESSIONSTART = '2020-01-08 15:00:00.000', @SESSIONEND = '2020-01-08 18:00:00.000', 
 @ROOMCODE ='GD224' , @SESSIONID = 3;*/
-
-/*DELETE FROM [Session] WHERE sessionId > 10*/
 
 /*UPDATE [Session] SET sessionStart = '2020-08-18 12:45:00.000'
 WHERE sessionId = 15*/
