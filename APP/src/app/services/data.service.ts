@@ -29,16 +29,17 @@ export class DataService {
     return this._http.get<Session>(this.apiURL + "/DGE/open/" + userId).subscribe((session) => {
       this.session = <Session>session;
       console.log(this.session);
+      /*Returns 404 error('No open sessions found') when no open sessions*/ 
     });
   }
 
   postStartSession(sessionEntered: Session) {
     this._http.post(this.apiURL + "/DGE/start", sessionEntered, {responseType: 'text'}).subscribe(
-      res => console.log(res)
-      /*res => console.log('HTTP response', res),
+      res => console.log('HTTP response', res),
       err => console.log('HTTP error', err.error.text),
-      () => console.log('HTTP request completed')*/
+      () => console.log('HTTP request completed')
     );
+    /*Can return something in completed request handler*/
     alert("Session STarted");
   }
 
