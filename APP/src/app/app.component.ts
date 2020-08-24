@@ -17,8 +17,7 @@ export class AppComponent {
     this.authService.loggedIn.subscribe(state => {
       this.isLoggedIn = state;
       if(this.isLoggedIn){
-          this.dataService.getUser(this.dataService.userId);
-          this.getSession();         
+          this.dataService.getUser(this.dataService.userId);       
         }     
         else
           this.dataService.user = null;  
@@ -27,8 +26,8 @@ export class AppComponent {
   }
 
   getSession(){
-    if(this.authService.loggedIn)
-      this.dataService.getOpenSession(this.dataService.userId);
+    if(this.authService.loggedIn && this.dataService.session == null)
+        this.dataService.getOpenSession(this.dataService.userId);
   }
 
   logout(){

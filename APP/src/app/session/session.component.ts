@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Session } from '../session';
 import { User } from '../user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-session',
@@ -19,7 +20,7 @@ export class SessionComponent implements OnInit {
   hourLeft: number;
   minutesLeft: number;
 
-  constructor(private dataService: DataService) { }
+  constructor(private dataService: DataService, private router: Router) { }
 
   session: Session;
   user: User;
@@ -32,7 +33,13 @@ export class SessionComponent implements OnInit {
     this.userID = this.user.userid;
     if (this.session != null)
       this.roomNumber = this.session.roomCode;
-
+      
+    console.log(this.dataService.user.firstName);
+    this.dataService.sessionPosted.subscribe(
+      (event) => {
+        this.dataService.getOpenSession(this.dataService.userId);
+      }
+    );
   }
 
   sessionEntered() {
@@ -74,6 +81,7 @@ export class SessionComponent implements OnInit {
       };
 
       this.dataService.postStartSession(enteredSession);
+      //Need to navigate to Home if successful session, otherwise display error
     }
     //end session
     else {
