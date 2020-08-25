@@ -11,6 +11,7 @@ namespace DodGyEdumacationAPI.Models
         }
 
         public string Userid { get; set; }
+        public Byte[] Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string UserType { get; set; }

@@ -1,6 +1,6 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using static DodGyEdumacationAPI.Startup;
 
 namespace DodGyEdumacationAPI.Models
 {
@@ -17,13 +17,16 @@ namespace DodGyEdumacationAPI.Models
 
         public virtual DbSet<Session> Session { get; set; }
         public virtual DbSet<User> User { get; set; }
+        public virtual DbSet<Report> Report { get; set; }
+        public virtual DbSet<Login> Login { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
                 /*#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.*/
-                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=DODGYEDUMACATION;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer(Config.GetConnectionString("DodgyDatabase"));
             }
         }
 
@@ -40,7 +43,7 @@ namespace DodGyEdumacationAPI.Models
 
                 entity.Property(e => e.SessionEnd)
                     .HasColumnName("sessionEnd");
-                    //.HasColumnType("datetime");
+                //.HasColumnType("datetime");
 
                 entity.Property(e => e.SessionStart)
                     .HasColumnName("sessionStart")
@@ -70,6 +73,10 @@ namespace DodGyEdumacationAPI.Models
                     .HasColumnName("userid")
                     .HasMaxLength(50);
 
+                entity.Property(e => e.Password)
+                    .HasColumnName("password");
+                    //.HasMaxLength(64);
+
                 entity.Property(e => e.FirstName)
                     .IsRequired()
                     .HasColumnName("firstName")
@@ -84,6 +91,16 @@ namespace DodGyEdumacationAPI.Models
                     .IsRequired()
                     .HasColumnName("userType")
                     .HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Report>(entity =>
+            {
+                entity.HasNoKey();
+            });
+
+            modelBuilder.Entity<Login>(entity =>
+            {
+                entity.HasNoKey();
             });
 
             OnModelCreatingPartial(modelBuilder);

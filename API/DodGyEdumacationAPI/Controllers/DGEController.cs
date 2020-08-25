@@ -2,13 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using DodGyEdumacationAPI.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DodGyEdumacationAPI.Controllers
 {
@@ -23,92 +22,125 @@ namespace DodGyEdumacationAPI.Controllers
             _context = context;
         }
 
-        // GET: api/DGE/user/{userId}
-        // Returns User object if found, otherwise nothing
-        [HttpGet("user/{userId}")]
-        public async Task<ActionResult<IEnumerable<User>>> GetUser(string userId)
-        {
-            return await _context.User.Where(u => u.Userid == userId).ToListAsync();
-        }
-
         // GET: api/DGE/active/{userId}
         // Returns Session if found, otherwise nothing
-        [HttpGet("open/{userId}")]
+        [HttpGet("open/{userId}"), Authorize]
         public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId)
         {
-            return await _context.Session.Where(s => s.UserId == userId && s.SessionEnd == null).ToListAsync();
+            var session =  await _context.Session.Where(s => s.UserId == userId && s.SessionEnd ==
+            null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear).FirstOrDefaultAsync();
+
+            if (session != null)
+                return Ok(session);
+            else
+                return NotFound("No open sessions found");
+        }
+
+        // GET: api/DGE/user/{userId}
+        // Return User if found, otherwise nothing
+        [HttpGet("user/{userId}"), Authorize]
+        public async Task<ActionResult<IEnumerable<User>>> GetUser(string userId)
+        {
+            var re = Request;
+            var headers = re.Headers;
+            foreach (var head in headers)
+            {
+                Console.WriteLine(head);
+            }
+
+            var user = await _context.User.Where(u => u.Userid == userId).Select(u =>
+            new User
+            {
+                Userid = u.Userid,
+                FirstName = u.FirstName,
+                LastName = u.LastName,
+                UserType = u.UserType
+            }
+            ).FirstOrDefaultAsync();
+
+            if (user != null)
+                return Ok(user);
+            else
+                return NotFound("User not found");
         }
 
         // GET: api/DGE/report
-        // 
-        [HttpGet("report")]
-        public async Task<List<Report>> GetReport(string userId, DateTime start, DateTime end)
+        //Returns Reports if found, otherwise NotFoundObjectResult
+        [HttpGet("report"), Authorize]
+        public async Task<ActionResult<IEnumerable<Report>>> GetReport(string userId, DateTime start, DateTime end)
         {
-            /*DateTime start1 = new DateTime(2019, 2, 6, 16, 40, 2);
-            DateTime end = new DateTime(2020, 8, 6, 17, 16, 40);*/
-            //Validation for user - should it retrieve the original user AND the requested userId
             List<Session> sessions = await _context.Session.Where(r => r.UserId == userId && r.SessionStart >= start && r.SessionEnd <= end).ToListAsync();
             List<Report> reports = new List<Report>();
 
-            string display = "";
+            SqlParameter sessionStart;
+            SqlParameter sessionEnd;
+            SqlParameter roomCode;
+            SqlParameter sessionId;
 
-            foreach(Session session in sessions)
+            foreach (Session session in sessions)
             {
-                //return teacher
-                reports.Add(new Report { DateTimeEntered = session.SessionStart, DateTimeLeft = session.SessionEnd, 
-                    Room = session.RoomCode, SessionType = session.SessionType, Teacher = "Boutros Ghali"});
+                sessionStart = new SqlParameter("@SESSIONSTART", session.SessionStart);
+                sessionEnd = new SqlParameter("@SESSIONEND", session.SessionEnd);
+                roomCode = new SqlParameter("@ROOMCODE", session.RoomCode);
+                sessionId = new SqlParameter("@SESSIONID", session.SessionId);
+
+                var sql = "EXEC GET_REPORT @SESSIONSTART, @SESSIONEND, @ROOMCODE, @SESSIONID";
+
+                List<Report> report = await _context.Report.FromSqlRaw(sql, sessionStart, sessionEnd, roomCode, sessionId).ToListAsync();
+
+                reports.Add(new Report
+                {
+                    SessionStart = report[0].SessionStart,
+                    SessionEnd = report[0].SessionEnd,
+                    RoomCode = report[0].RoomCode,
+                    SessionType = report[0].SessionType,
+                    Teacher = report[0].Teacher
+                });
             }
 
-            Console.WriteLine(display);
-
-            //Console.WriteLine(start);
-            //Console.WriteLine();
-
-            return reports;
+            if (reports.Count() != 0)
+                return Ok(reports);
+            else
+                return NotFound("No reports found");
         }
 
-        /*public string GetTeacher()
-        {
-            return 
-        }*/
-
         // POST: api/DGE/start
-        //Returns incremented sessionID from DB if INSERT accepted, otherwise error and returns -1
-        [HttpPost("start")]
-        public async Task<int> SessionStart(Session session)
+        //Returns an OK result if insert Session successful 
+        [HttpPost("start"), Authorize]
+        public async Task<IActionResult> SessionStart(Session session)
         {
-            if (!await _context.Session.AnyAsync(s => s.UserId == session.UserId && s.SessionEnd == null))
+            Console.WriteLine("PostMethod Called");
+
+            try
             {
-                var sessionId = new SqlParameter
+                Session record = FindOpenSession(session);
+
+                if (record == null)
                 {
-                    ParameterName = "@SESSIONID",
-                    DbType = System.Data.DbType.Int32,
-                    Direction = System.Data.ParameterDirection.Output
-                };
+                    _context.Session.Add(session);
+                    await _context.SaveChangesAsync();
 
-                SqlParameter roomCode = new SqlParameter("@ROOMCODE", session.RoomCode);
-                SqlParameter sessionStart = new SqlParameter("@SESSIONSTART", session.SessionStart.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-                SqlParameter sessionType = new SqlParameter("@SESSIONTYPE", session.SessionType);
-                SqlParameter userId = new SqlParameter("@USERID", session.UserId);
+                    Console.WriteLine("Sesson Started");
+                    return Ok("Session successfully entered");
+                }
+                else
+                    return NotFound("Could not find an open session in the database with the information sent.");
 
-                var sql = "EXEC @SESSIONID = START_SESSION @ROOMCODE, @SESSIONSTART, @SESSIONTYPE, @USERID";
-
-                await _context.Database.ExecuteSqlRawAsync(sql, sessionId, roomCode, sessionStart, sessionType, userId);
-
-                return Convert.ToInt32(sessionId.Value);
             }
-            else
-                return -1;
+            catch (SqlException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         // PUT: api/DGE/end
         //Returns an Ok IActionResult if record is successfully updated, other requests if not
-        [HttpPut("end")]
+        [HttpPut("end"), Authorize]
         public async Task<IActionResult> SessionEnd(Session session)
         {
             try
             {
-                Session record = (from s in _context.Session where s.SessionId == session.SessionId && s.SessionEnd == null select s).SingleOrDefault();
+                Session record = FindOpenSession(session);
 
                 if (record != null)
                 {
@@ -131,6 +163,13 @@ namespace DodGyEdumacationAPI.Controllers
                 else
                     return BadRequest(ex.Message);
             }
+        }
+
+        //Checks Session in database and returns an open Session
+        private Session FindOpenSession(Session session)
+        {
+            Session record = (from s in _context.Session where s.SessionId == session.SessionId && s.SessionEnd == null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear select s).FirstOrDefault();
+            return record;
         }
 
         //Checks Session record and returns true if sessionEnd value has been updated, false if it has not
