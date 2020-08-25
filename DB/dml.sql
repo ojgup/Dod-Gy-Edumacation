@@ -1,4 +1,7 @@
 USE DODGYEDUMACATION;
+
+GO
+
 INSERT INTO [User]
     (userid, [password], firstName, lastName, userType)
 VALUES
@@ -6,6 +9,8 @@ VALUES
     ('123456789', HASHBYTES('SHA2_512', 'student'), 'Jason', 'Yeggs', 'Student'),
     ('103049802x', HASHBYTES('SHA2_512', 'staff'), 'Stephen', 'Grouios', 'Staff'),
     ('111222333x', HASHBYTES('SHA2_512', 'staff'), 'Boutros', 'Ghali', 'Staff');
+
+GO
 
 INSERT INTO [Session]
     (roomCode, sessionStart, sessionEnd, sessionType, userId)
