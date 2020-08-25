@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { Report } from '../report';
 import { User } from '../user';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-reporting',
@@ -24,19 +25,21 @@ export class ReportingComponent implements OnInit {
   ];
 
   reports: Array<Report>;
-  user: User;
+  user: BehaviorSubject<User>;
   disableUserId: boolean;
 
-  constructor(public dataService: DataService) { }
+  constructor(private dataService: DataService) {
+    this.user = this.dataService.user;
+  }
 
   ngOnInit(): void {
     console.log("Report OnInIt");
     this.user = this.dataService.user;
-    console.log(this.user.userType);
-    
-    if (this.user.userType != "Staff") {
+    console.log(this.user.getValue().userType);
+
+    if (this.user.getValue().userType != "Staff") {
       this.disableUserId = true;
-      this.userID = this.user.userid;
+      this.userID = this.user.getValue().userId;
     }
 
   }

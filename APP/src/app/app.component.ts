@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import {AuthService} from './services/auth.service';
+import { AuthService } from './services/auth.service';
 import { DataService } from './services/data.service';
 import { _ } from 'ag-grid-community';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -11,30 +12,24 @@ import { _ } from 'ag-grid-community';
 export class AppComponent {
   title = 'Dod&gy Edumacation | COVID-19 Contact Tracer';
 
-  isLoggedIn: boolean;
+  loggedIn: boolean;
 
-  constructor(private authService: AuthService, private dataService: DataService){
-    this.authService.loggedIn.subscribe(state => {
-      this.isLoggedIn = state;
-      if(this.isLoggedIn){
-          this.dataService.getUser(this.dataService.userId);       
-        }     
-        else
-          this.dataService.user = null;  
+  constructor(private authService: AuthService, private dataService: DataService, private router: Router) {
+    this.authService.loggedIn.subscribe((value) => {
+      this.loggedIn = value;
+      if (value) {
+        console.log(value);
+
+        this.dataService.getUser();
       }
-    );
+      else {
+        this.dataService.user.next(null);
+        this.router.navigate(["/login"])
+      }
+    });
   }
 
-  getSession(){
-    if(this.authService.loggedIn && this.dataService.session == null)
-        this.dataService.getOpenSession(this.dataService.userId);
-  }
-
-  logout(){
+  logout() {
     this.authService.logout();
-  }
-
-  navlinkClicked(buttonName:String){
-    
   }
 }
