@@ -1,21 +1,24 @@
 <div class="inputs">
   <app-label class="col-left" labelName="User ID:" labelFor="user-id"></app-label>
-  <input [disabled]="this.session != null" class="col-mid user-id" [(ngModel)]="userID" name="user-id" type="text" />
+  <input [disabled]="true" class="col-mid user-id" [(ngModel)]="user.userId" name="user-id" type="text" />
 
   <app-label class="col-left" labelName="Room:" labelFor="room"></app-label>
   <input [disabled]="this.session != null" class="col-mid room" [(ngModel)]="roomNumber" name="room" type="text" />
 
-  <div class="button-box">
-    <button class="btn class-btn" id="ClassButton" (click)="ClassButtonClicked()" type="button">Class</button>
-    <button class="btn office-btn" id="OfficeButton" (click)="OfficeButtonClicked()" type="button">Office</button>
+  <div *ngIf="user && user.userType == 'Staff'" class="button-box">
+    <button [class.inactive]="sessionType != 'Class'" class="btn class-btn" id="ClassButton" (click)="ClassButtonClicked()" type="button">Class</button>
+    <button [class.inactive]="sessionType != 'Office'" class="btn office-btn" id="OfficeButton" (click)="OfficeButtonClicked()" type="button">Office</button>
   </div>
 
-  <app-label *ngIf="this.session == null" class="col-left" labelName="Time Entered:" labelFor="time-entered"></app-label>
+  <app-label *ngIf="!this.session" class="col-left" labelName="Time Entered:" labelFor="time-entered"></app-label>
   <app-label *ngIf="this.session" class="col-left" labelName="Time Left:" labelFor="time-entered"></app-label>
 
   <input class="col-mid-left time" [(ngModel)]="hourEntered" type="number" min="0" max="23" />
   <div class="col-mid-mid">:</div>
   <input class="col-mid-right time" [(ngModel)]="minutesEntered" type="number" min="0" max="59" />
+
+  <div *ngIf="this.hourEntered < 0 || this.hourEntered > 23" class="alert col-mid">Invalid Hours</div>
+  <div *ngIf="this.minutesEntered < 0 || this.minutesEntered > 59" class="alert col-mid">Invalid minutes</div>
 
   <app-btn-submit class="col-mid" (click)="sessionEntered()"></app-btn-submit>
 </div>
