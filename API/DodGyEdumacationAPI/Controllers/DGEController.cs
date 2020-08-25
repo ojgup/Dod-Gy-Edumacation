@@ -8,6 +8,7 @@ using DodGyEdumacationAPI.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 
 namespace DodGyEdumacationAPI.Controllers
 {
@@ -23,7 +24,7 @@ namespace DodGyEdumacationAPI.Controllers
         }
 
         // GET: api/DGE/active/{userId}
-        // Returns Session if found, otherwise nothing
+        // Returns Session if found, otherwise NoContent() HttpResponse
         [HttpGet("open/{userId}"), Authorize]
         public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId)
         {
@@ -33,20 +34,14 @@ namespace DodGyEdumacationAPI.Controllers
             if (session != null)
                 return Ok(session);
             else
-                return NotFound("No open sessions found");
+                return NoContent();
         }
 
         // GET: api/DGE/user/{userId}
-        // Return User if found, otherwise nothing
+        // Return User if found, otherwise NoContent() HttpResponse
         [HttpGet("user/{userId}"), Authorize]
         public async Task<ActionResult<IEnumerable<User>>> GetUser(string userId)
         {
-            var re = Request;
-            var headers = re.Headers;
-            foreach (var head in headers)
-            {
-                Console.WriteLine(head);
-            }
 
             var user = await _context.User.Where(u => u.Userid == userId).Select(u =>
             new User
@@ -61,11 +56,11 @@ namespace DodGyEdumacationAPI.Controllers
             if (user != null)
                 return Ok(user);
             else
-                return NotFound("User not found");
+                return NoContent();
         }
 
         // GET: api/DGE/report
-        //Returns Reports if found, otherwise NotFoundObjectResult
+        //Returns Reports if found, otherwise NoContent() HttpResponse
         [HttpGet("report"), Authorize]
         public async Task<ActionResult<IEnumerable<Report>>> GetReport(string userId, DateTime start, DateTime end)
         {
@@ -101,16 +96,14 @@ namespace DodGyEdumacationAPI.Controllers
             if (reports.Count() != 0)
                 return Ok(reports);
             else
-                return NotFound("No reports found");
+                return NoContent();
         }
 
         // POST: api/DGE/start
-        //Returns an OK result if insert Session successful 
+        //Returns an Ok response if insert Session successful, BadRequest response if body data improper, InternalServerError response if SQLException 
         [HttpPost("start"), Authorize]
         public async Task<IActionResult> SessionStart(Session session)
         {
-            Console.WriteLine("PostMethod Called");
-
             try
             {
                 Session record = FindOpenSession(session);
@@ -120,21 +113,20 @@ namespace DodGyEdumacationAPI.Controllers
                     _context.Session.Add(session);
                     await _context.SaveChangesAsync();
 
-                    Console.WriteLine("Sesson Started");
-                    return Ok("Session successfully entered");
+                    return Ok();
                 }
                 else
-                    return NotFound("Could not find an open session in the database with the information sent.");
+                    return BadRequest(new { message = "Session already exists." });
 
             }
             catch (SqlException ex)
             {
-                return BadRequest(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
             }
         }
 
         // PUT: api/DGE/end
-        //Returns an Ok IActionResult if record is successfully updated, other requests if not
+        //Returns an Ok response if Session successfully closed, BadRequest response if body data improper, InternalServerError response if DBUpdateConcurrencyException 
         [HttpPut("end"), Authorize]
         public async Task<IActionResult> SessionEnd(Session session)
         {
@@ -151,17 +143,12 @@ namespace DodGyEdumacationAPI.Controllers
                     return Ok();
                 }
                 else
-                    return NotFound("Could not find an open session in the database with the information sent.");
+                    return BadRequest(new { message = "Session does not exist." });
 
             }
             catch (DbUpdateConcurrencyException ex)
             {
-                if (CheckEndDate(session.SessionId))
-                {
-                    return BadRequest("The current record has already been updated");
-                }
-                else
-                    return BadRequest(ex.Message);
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
             }
         }
 
@@ -170,12 +157,6 @@ namespace DodGyEdumacationAPI.Controllers
         {
             Session record = (from s in _context.Session where s.SessionId == session.SessionId && s.SessionEnd == null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear select s).FirstOrDefault();
             return record;
-        }
-
-        //Checks Session record and returns true if sessionEnd value has been updated, false if it has not
-        private bool CheckEndDate(int sessionId)
-        {
-            return _context.Session.Any(s => s.SessionId == sessionId && s.SessionEnd != null);
         }
 
     }

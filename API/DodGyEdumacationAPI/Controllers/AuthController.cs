@@ -24,13 +24,13 @@ namespace DodGyEdumacationAPI.Controllers
 
         // GET api/auth/login
         // Accepts a Login object - parameters userId (string) and password (string). If the model values match a user login in the database it
-        // returns a JWT, otherwise Unauthorized result
+        // returns a JWT, otherwise Unauthorized result if details invalid, BadRequest if login details improper
         [HttpPost, Route("login")]
         public IActionResult Login(Login login)
         {
             if (login == null)
             {
-                return BadRequest("Invalid client request");
+                return BadRequest(new  {message = "Invalid client request"});
             }
 
             var passwordHash = SHA512.Create();
