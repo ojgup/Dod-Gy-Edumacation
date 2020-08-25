@@ -14,7 +14,7 @@ export class DataService {
   userId: string;
   session: Session;
   sessionType: string;
-  apiURL = "https://localhost:5001/api";
+  apiURL = "https://ec2-52-23-253-40.compute-1.amazonaws.com/api";
   sessionPosted: EventEmitter<boolean>;
 
   constructor(private _http: HttpClient) {
