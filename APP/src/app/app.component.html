@@ -7,10 +7,10 @@
 
     <nav>
       <ul>
-        <li><a (click)="getSession()" routerLink="/session" class="nav-link" href="#">Session</a></li>
+        <li><a routerLink="/session" class="nav-link" href="#">Session</a></li>
         <li><a routerLink="/reporting" class="nav-link" href="#">Reporting</a></li>
-        <li *ngIf="!isLoggedIn"><a routerLink="/login" class="nav-link" href="#">Login</a></li>
-        <li *ngIf="isLoggedIn"><a routerLink="/" class="nav-link" href="#" (click)="logout()">Logout</a></li>
+        <li *ngIf="!loggedIn"><a routerLink="/login" class="nav-link" href="#">Login</a></li>
+        <li *ngIf="loggedIn"><a routerLink="/" class="nav-link" href="#" (click)="logout()">Logout</a></li>
       </ul>
     </nav>
   </div>
