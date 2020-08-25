@@ -6,7 +6,6 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {LabelComponent} from './label/label.component';
 import {InputBoxComponent} from './input-box/input-box.component';
-import { ButtonBoxComponent } from './button-box/button-box.component';
 import { BtnSubmitComponent } from './btn-submit/btn-submit.component';
 import { DataService } from './services/data.service';
 import { SessionComponent } from './session/session.component';
@@ -24,7 +23,6 @@ export function tokenGetter() {
     AppComponent,
     LabelComponent,
     InputBoxComponent,
-    ButtonBoxComponent,
     BtnSubmitComponent,
     SessionComponent,
     ReportingComponent,
