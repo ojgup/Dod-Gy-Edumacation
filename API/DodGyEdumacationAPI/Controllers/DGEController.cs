@@ -146,16 +146,16 @@ namespace DodGyEdumacationAPI.Controllers
                     return BadRequest(new { message = "Session does not exist." });
 
             }
-            catch (DbUpdateConcurrencyException ex)
+            catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, new { message = ex.Message });
-            }
+                return StatusCode(StatusCodes.Status500InternalServerError, new { message = "An error occurred while updating the entries." });
+                }
         }
 
         //Checks Session in database and returns an open Session
         private Session FindOpenSession(Session session)
         {
-            Session record = (from s in _context.Session where s.SessionId == session.SessionId && s.SessionEnd == null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear select s).FirstOrDefault();
+            Session record = (from s in _context.Session where s.UserId == session.UserId && s.SessionEnd == null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear select s).FirstOrDefault();
             return record;
         }
 
