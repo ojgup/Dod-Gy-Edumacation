@@ -13,7 +13,7 @@ import { SessionComponent } from './session/session.component';
 import { ReportingComponent } from './reporting/reporting.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { LoginComponent } from './login/login.component';
-import {JwtModule} from '@auth0/angular-jwt';
+import { JwtModule } from '@auth0/angular-jwt';
 
 export function tokenGetter() {
   return JSON.parse(localStorage.getItem('Authorization'));
@@ -39,7 +39,7 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ['localhost:5001']
+        allowedDomains: ['ec2-52-23-253-40.compute-1.amazonaws.com']
       }
     })
   ],
