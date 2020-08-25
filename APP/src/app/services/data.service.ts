@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Session } from '../session';
 import { User } from '../user';
 import { Report } from '../report';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,40 +11,48 @@ import { Report } from '../report';
 
 export class DataService {
 
-  user: User;
+  user: BehaviorSubject<User>;
   userId: string;
-  session: Session;
-  sessionType: string;
-  apiURL = "https://ec2-52-23-253-40.compute-1.amazonaws.com/api";
+  session: BehaviorSubject<Session>;
+  apiURL = "http://ec2-52-23-253-40.compute-1.amazonaws.com/api";
   sessionPosted: EventEmitter<boolean>;
 
   constructor(private _http: HttpClient) {
+    this.user = new BehaviorSubject(null);
+    this.session = new BehaviorSubject(null);
     this.sessionPosted = new EventEmitter();
   }
 
-  getUser(userId: string) {
-    return this._http.get<User>(this.apiURL + "/DGE/user/" + userId).subscribe((user) => {
-      this.user = <User>user;
-      this.userId = user.userid;
+  getUser() {
+    this._http.get<any>(this.apiURL + "/DGE/user/" + this.userId).subscribe((data) => {
+      let user: User = {
+        "userId": data.userid,
+        "firstName": data.firstName,
+        "lastName": data.lastName,
+        "userType": data.userType,
+      }
+      this.user.next(user);
+      this.getOpenSession()
     });
   }
 
-  /*this.session = <Session>session;
-console.log(this.session);*/
   /*Returns 404 error('No open sessions found') when no open sessions*/
-  getOpenSession(userId: string) {
-    return this._http.get<Session>(this.apiURL + "/DGE/open/" + userId).subscribe(
+  getOpenSession() {
+    this._http.get<Session>(this.apiURL + "/DGE/open/" + this.user.getValue().userId).subscribe(
       (session) => {
-        this.session = <Session>session;
-        console.log(this.session);
+        if (session) {
+          this.session.next(<Session>session);
+        } else {
+          this.session.next(null);
+          console.log("no session");
+        }
       },
       err => {
         console.log(err.error);
       },
-      () => true
+      () => {}
     )
   }
-
 
   postStartSession(sessionEntered: Session) {
     this._http.post(this.apiURL + "/DGE/start", sessionEntered, { responseType: 'text' }).subscribe(
@@ -55,7 +64,7 @@ console.log(this.session);*/
       () => console.log('HTTP request completed')
     );
     /*Can return something in completed request handler*/
-    alert("Session STarted");
+    alert("Session Started");
   }
 
   postEndSession(sessionEnd: Session) {
