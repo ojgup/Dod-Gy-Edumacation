@@ -3,7 +3,7 @@ import { DataService } from '../services/data.service';
 import { Session } from '../session';
 import { User } from '../user';
 import { Router } from '@angular/router';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, empty } from 'rxjs';
 import { DateFilter } from 'ag-grid-community';
 
 @Component({
@@ -60,27 +60,32 @@ export class SessionComponent implements OnInit {
     difference.setHours(difference.getHours() - 6);
 
     //Close Session
-    if(this.session != null){
+    if (this.session != null) {
       date.setHours(date.getHours() + offset);
       this.session.sessionEnd = date.toJSON();
       console.log(this.session);
       this.dataService.postEndSession(this.session);
+      this.roomNumber = "";
+      this.hourEntered = null;
+      this.minutesEntered = null;
     }
 
     //Start Session
     if (date > difference) {
       date.setHours(date.getHours() + offset);
       if (this.session == null) {//Time acceptable
-          let enteredSession: Session =
-          {
-            'roomCode': this.roomNumber,
-            'sessionStart': date.toJSON(),
-            'userID': this.user.userId,
-            'sessionType': this.sessionType,
-          };
-  
-          this.dataService.postStartSession(enteredSession);
-          //Need to navigate to Home if successful session, otherwise display error
+        let enteredSession: Session =
+        {
+          'roomCode': this.roomNumber,
+          'sessionStart': date.toJSON(),
+          'userID': this.user.userId,
+          'sessionType': this.sessionType,
+        };
+
+        this.dataService.postStartSession(enteredSession);
+        this.hourEntered = null;
+        this.minutesEntered = null;
+        //Need to navigate to Home if successful session, otherwise display error
       }
     }
     else
