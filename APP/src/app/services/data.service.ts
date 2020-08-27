@@ -55,16 +55,24 @@ export class DataService {
   }
 
   postStartSession(sessionEntered: Session) {
+    let message: string;
     this._http.post(this.apiURL + "/DGE/start", sessionEntered, { responseType: 'text' }).subscribe(
       res => {
         this.sessionPosted.emit();
         console.log('HTTP response', res);
+        message = "Successfully entered";
       },
-      err => console.log('HTTP error', err.error.text),
-      () => console.log('HTTP request completed')
+      err => {
+        console.log('HTTP error', err.error.text);
+        message = "Error";
+      },
+      () => {
+        console.log('HTTP request completed');
+        alert(message);
+      }
     );
     /*Can return something in completed request handler*/
-    alert("Session Started");
+    //alert("Session Started");
   }
 
   postEndSession(sessionEnd: Session) {
@@ -72,7 +80,7 @@ export class DataService {
       res => {
         this.sessionPosted.emit();
       },
-      err => {},
+    err => {/*retrieve error message and alert*/},
       () => {},
     );
     alert("Session Ended");
