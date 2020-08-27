@@ -14,7 +14,7 @@ export class DataService {
   user: BehaviorSubject<User>;
   userId: string;
   session: BehaviorSubject<Session>;
-  apiURL = "https://ec2-52-23-253-40.compute-1.amazonaws.com/api";
+  apiURL = "http://ec2-52-23-253-40.compute-1.amazonaws.com/api";
   sessionPosted: EventEmitter<boolean>;
 
   constructor(private _http: HttpClient) {
