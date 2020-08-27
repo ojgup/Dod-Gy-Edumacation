@@ -17,11 +17,11 @@ export class ReportingComponent implements OnInit {
   days: number;
 
   columnDefs = [
-    { headerName: 'Session Start', field: 'sessionStart' },
-    { headerName: 'Session End', field: 'sessionEnd' },
-    { headerName: 'Room', field: 'roomCode' },
-    { headerName: 'Type', field: 'sessionType' },
-    { headerName: 'Teacher', field: 'teacher' }
+    { headerName: 'Session Start', field: 'sessionStart', suppressMovable: true },
+    { headerName: 'Session End', field: 'sessionEnd', suppressMovable: true  },
+    { headerName: 'Room', field: 'roomCode', suppressMovable: true  },
+    { headerName: 'Type', field: 'sessionType', suppressMovable: true  },
+    { headerName: 'Teacher', field: 'teacher', suppressMovable: true  }
   ];
 
   reports: Array<Report>;
@@ -49,10 +49,11 @@ export class ReportingComponent implements OnInit {
     this.StartDate.setHours(0, 0, 0);
     this.EndDate = new Date(this.EndDate);
     this.EndDate.setHours(0, 0, 0);
-
     this.dataService.getReport(this.userID, this.StartDate.toJSON(), this.EndDate.toJSON()).subscribe((data) => {
       this.reports = data;
       this.days = this.reports.length;
+      
+      
     },
       err => alert(err.error))/*This returns the error if no reports found - use err.error to inform user with message*/
   }
