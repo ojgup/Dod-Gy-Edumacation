@@ -13,16 +13,17 @@ export class AppComponent {
   title = 'Dod&gy Edumacation | COVID-19 Contact Tracer';
 
   loggedIn: boolean;
+  loggingIn: boolean;
 
   constructor(private authService: AuthService, private dataService: DataService, private router: Router) {
+    this.authService.loggingIn.subscribe((value) => {
+      this.loggingIn = value;
+    })
     this.authService.loggedIn.subscribe((value) => {
       this.loggedIn = value;
       if (value) {
-        console.log(value);
-
-        this.dataService.getUser();
-      }
-      else {
+        this.router.navigate(['/session']);
+      } else {
         this.dataService.user.next(null);
         this.router.navigate(["/login"])
       }

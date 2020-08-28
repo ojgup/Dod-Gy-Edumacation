@@ -4,6 +4,7 @@
   align-items: center;
   column-gap: 5px;
   row-gap: 5px;
+  margin-bottom: 20px;
 }
 
 .col-left {
@@ -62,10 +63,8 @@ input:focus {
 
 .report-grid {
   justify-self: center;
-}
-
-.grid {
-  width: 1005px;
+  width: 100%;
+  max-width: 1002px;
   height: 400px;
   font-weight: 500;
 }

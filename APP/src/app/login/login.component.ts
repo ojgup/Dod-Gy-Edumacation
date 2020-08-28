@@ -14,14 +14,9 @@ export class LoginComponent implements OnInit {
   userId: string;
   password: string;
 
-  constructor(private authService: AuthService, private dataService: DataService, private router: Router) {
-    this.dataService.user.subscribe((value) => {
-      this.router.navigate(['/session']);
-    })
-  }
+  constructor(private authService: AuthService, private dataService: DataService, private router: Router) { }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void { }
 
   onSubmit(){
     let details: Login = {
@@ -29,7 +24,17 @@ export class LoginComponent implements OnInit {
       "password": this.password
     }
 
-    this.authService.login(details);
+    this.authService.login(details).catch(() => {
+      let elements = [
+        document.querySelector('.user-id'),
+        document.querySelector('.password'),
+      ]
+      elements.forEach((element: HTMLElement) => {
+        element.classList.add('invalid');
+      })
+
+      document.querySelector('.alert').classList.remove('hidden');
+    });
     this.dataService.userId = this.userId;
   }
 }

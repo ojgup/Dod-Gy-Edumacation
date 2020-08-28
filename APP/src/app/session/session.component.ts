@@ -39,14 +39,9 @@ export class SessionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.session != null)
+    if (this.session != null) {
       this.roomNumber = this.session.roomCode;
-
-    this.dataService.sessionPosted.subscribe(
-      (event) => {
-        this.dataService.getOpenSession();
-      }
-    );
+    }
   }
 
   sessionEntered() {

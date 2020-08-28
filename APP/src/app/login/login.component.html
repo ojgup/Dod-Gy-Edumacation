@@ -1,9 +1,11 @@
 <div class="inputs">
+    <div class="col-mid alert hidden">Try again. Login details incorrect.</div>
+
     <app-label class="col-left" labelName="User Id:" labelFor="userId"></app-label>
     <input class="col-mid user-id" [(ngModel)]="userId" name="userId" type="text" />
-  
+
     <app-label class="col-left" labelName="Password:" labelFor="password"></app-label>
     <input class="col-mid password" [(ngModel)]="password" name="password" type="password" />
-  
-    <app-btn-submit class="col-mid" (click)="onSubmit()"></app-btn-submit>
-</div>  
+
+    <app-btn-submit class="col-mid" (click)="onSubmit()" name="Login"></app-btn-submit>
+</div>

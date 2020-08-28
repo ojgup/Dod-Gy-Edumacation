@@ -7,10 +7,11 @@ import { Session } from '../session';
   styleUrls: ['./btn-submit.component.css']
 })
 export class BtnSubmitComponent implements OnInit {
+  @Input() name: string;
 
   constructor() { }
 
-  
+
   ngOnInit(): void {
   }
 }

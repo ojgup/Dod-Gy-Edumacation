@@ -5,7 +5,7 @@
   <app-label class="col-left" labelName="Room:" labelFor="room"></app-label>
   <input [disabled]="this.session != null" class="col-mid room" [(ngModel)]="roomNumber" name="room" type="text" />
 
-  <div *ngIf="user && user.userType == 'Staff'" class="button-box">
+  <div *ngIf="user.userType == 'Staff'" class="button-box">
     <button [class.inactive]="sessionType != 'Class'" class="btn class-btn" id="ClassButton" (click)="ClassButtonClicked()" type="button">Class</button>
     <button [class.inactive]="sessionType != 'Office'" class="btn office-btn" id="OfficeButton" (click)="OfficeButtonClicked()" type="button">Office</button>
   </div>
@@ -20,5 +20,5 @@
   <div *ngIf="this.hourEntered < 0 || this.hourEntered > 23" class="alert col-mid">Invalid Hours</div>
   <div *ngIf="this.minutesEntered < 0 || this.minutesEntered > 59" class="alert col-mid">Invalid minutes</div>
 
-  <app-btn-submit class="col-mid" (click)="sessionEntered()"></app-btn-submit>
+  <app-btn-submit class="col-mid" (click)="sessionEntered()" name="Submit"></app-btn-submit>
 </div>
