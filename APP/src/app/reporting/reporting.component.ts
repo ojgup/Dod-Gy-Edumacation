@@ -25,24 +25,16 @@ export class ReportingComponent implements OnInit {
   ];
 
   reports: Array<Report>;
-  user: BehaviorSubject<User>;
+  user: User;
   disableUserId: boolean;
 
   constructor(private dataService: DataService) {
-    this.user = this.dataService.user;
+    this.dataService.user.subscribe((value) => {
+      this.user = value;
+    });
   }
 
-  ngOnInit(): void {
-    console.log("Report OnInIt");
-    this.user = this.dataService.user;
-    console.log(this.user.getValue().userType);
-
-    if (this.user.getValue().userType != "Staff") {
-      this.disableUserId = true;
-      this.userId = this.user.getValue().userId;
-    }
-
-  }
+  ngOnInit(): void { }
 
   GetSessions() {
     this.StartDate = new Date(this.StartDate);

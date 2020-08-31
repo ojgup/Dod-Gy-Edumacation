@@ -25,10 +25,14 @@ export class AppComponent {
     this.authService.loggedIn.subscribe((value) => {
       this.loggedIn = value;
       if (value) {
-        this.router.navigate(['/session']);
+        if (this.user.userType != 'Admin') {
+          this.router.navigate(['/session']);
+        } else {
+          this.router.navigate(['/reporting']);
+        }
       } else {
         this.dataService.user.next(null);
-        this.router.navigate(["/login"])
+        this.router.navigate(['/login'])
       }
     });
     this.dataService.user.subscribe((value) => {
