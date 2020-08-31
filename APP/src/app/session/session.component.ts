@@ -23,7 +23,15 @@ export class SessionComponent implements OnInit {
   session: Session;
   user: User;
 
+  errorTimeTravel: boolean;
+  errorFuture: boolean;
+  errorStale: boolean;
+
   constructor(private dataService: DataService, private router: Router) {
+    this.errorTimeTravel = false;
+    this.errorFuture = false;
+    this.errorStale = false;
+
     this.dataService.user.subscribe((value: User) => {
       this.user = value;
       console.log("just fetched user: ", this.user);
@@ -46,46 +54,11 @@ export class SessionComponent implements OnInit {
     }
   }
 
-  // sessionEntered() {
-  //   var date: Date = new Date();
-  //   date.setHours(this.hours, this.minutes, 0, 0);
-
-  //   var difference = new Date();
-  //   difference.setHours(difference.getHours() - 6);
-
-  //   //Close Session
-  //   if (this.session != null) {
-  //     date.setHours(date.getHours());
-  //     this.session.sessionEnd = date.toJSON();
-  //     console.log(this.session);
-  //     this.dataService.postEndSession(this.session);
-  //     this.roomNumber = "";
-  //     this.hours = null;
-  //     this.minutes = null;
-  //   }
-
-  //   //Start Session
-  //   if (date > difference) {
-  //     date.setHours(date.getHours());
-  //     if (this.session == null) {//Time acceptable
-  //       let enteredSession: Session =
-  //       {
-  //         'roomCode': this.roomNumber,
-  //         'sessionStart': date.toJSON(),
-  //         'userID': this.user.userId,
-  //         'sessionType': this.sessionType,
-  //       };
-
-  //       this.dataService.postStartSession(enteredSession);
-  //       this.hours = null;
-  //       this.minutes = null;
-  //       //Need to navigate to Home if successful session, otherwise display error
-  //     }
-  //   }
-  //   else
-  //     alert("You cannot enter a session time more than 6 hours before your current time");
-  // }
   sessionEntered() {
+    this.errorTimeTravel = false;
+    this.errorFuture = false;
+    this.errorStale = false;
+
     let date: Date = new Date();
     date.setHours(this.hours, this.minutes, 0, 0);
 
@@ -99,10 +72,17 @@ export class SessionComponent implements OnInit {
     }
     if (diff < -6 * 60 * 60 * 1000) {
       console.log('too long ago');
+      this.errorStale = true;
+      return;
+    }
+    if (this.session && date.getTime() + date.getTimezoneOffset() * 60 * 1000 <= this.session.sessionStart.getTime()) {
+      console.log('end before start');
+      this.errorTimeTravel = true;
       return;
     }
     else if (diff > 0) {
-      console.log('try logging it when you have left');
+      console.log('future time');
+      this.errorFuture = true;
       return;
     }
 
@@ -110,17 +90,17 @@ export class SessionComponent implements OnInit {
       let enteredSession: Session =
       {
         'roomCode': this.roomNumber,
-        'sessionStart': date.toJSON(),
+        'sessionStart': date,
         'userID': this.user.userId,
         'sessionType': this.sessionType,
       };
 
-      this.dataService.postStartSession(enteredSession);
+      this.dataService.postStartSession(enteredSession).catch((err) => console.log(err));
     }
     else { //end session
-      this.session.sessionEnd = date.toJSON();
+      this.session.sessionEnd = date;
       console.log(this.session);
-      this.dataService.postEndSession(this.session);
+      this.dataService.postEndSession(this.session).catch((err) => console.log(err));
     }
   }
 

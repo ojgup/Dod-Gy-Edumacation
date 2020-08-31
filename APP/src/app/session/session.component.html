@@ -5,10 +5,16 @@
   <app-label class="col-left" labelName="Room:" labelFor="room"></app-label>
   <input [disabled]="this.session != null" class="col-mid room" [(ngModel)]="roomNumber" name="room" type="text" />
 
-  <div *ngIf="user.userType == 'Staff'" class="button-box">
+  <div *ngIf="user.userType == 'Staff' && !session" class="button-box">
     <button [class.inactive]="sessionType != 'Class'" class="btn class-btn" id="ClassButton" (click)="ClassButtonClicked()" type="button">Class</button>
     <button [class.inactive]="sessionType != 'Office'" class="btn office-btn" id="OfficeButton" (click)="OfficeButtonClicked()" type="button">Office</button>
   </div>
+
+  <app-label *ngIf="this.session" class="col-left" labelName="Time Entered:" labelFor="time-entered"></app-label>
+
+  <input *ngIf="this.session" [disabled]="true" class="col-mid-left time" [ngModel]="session.sessionStart.getHours() - (session.sessionStart.getTimezoneOffset() - session.sessionStart.getTimezoneOffset() % 60) / 60" type="number" min="0" max="23" />
+  <div *ngIf="this.session" class="col-mid-mid">:</div>
+  <input *ngIf="this.session" [disabled]="true" class="col-mid-right time" [ngModel]="session.sessionStart.getMinutes() - session.sessionStart.getTimezoneOffset() % 60" type="number" min="0" max="59" />
 
   <app-label *ngIf="!this.session" class="col-left" labelName="Time Entered:" labelFor="time-entered"></app-label>
   <app-label *ngIf="this.session" class="col-left" labelName="Time Left:" labelFor="time-entered"></app-label>
@@ -21,4 +27,8 @@
   <div *ngIf="this.minutes < 0 || this.minutes > 59" class="alert col-mid">Invalid minutes</div>
 
   <app-btn-submit class="col-mid" (click)="sessionEntered()" name="Submit"></app-btn-submit>
+
+  <div class="col-mid alert" [class.hidden]="!errorFuture">Please enter a time in the past.</div>
+  <div class="col-mid alert" [class.hidden]="!errorStale">Please enter a time in the past 6 hours.</div>
+  <div class="col-mid alert" [class.hidden]="!errorTimeTravel">Please enter a time after the start of the session.</div>
 </div>

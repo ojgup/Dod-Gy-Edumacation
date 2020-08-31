@@ -14,7 +14,11 @@ export class LoginComponent implements OnInit {
   userId: string;
   password: string;
 
-  constructor(private authService: AuthService, private dataService: DataService, private router: Router) { }
+  errorDetails: boolean;
+
+  constructor(private authService: AuthService, private dataService: DataService, private router: Router) {
+    this.errorDetails = false;
+  }
 
   ngOnInit(): void { }
 
@@ -24,17 +28,12 @@ export class LoginComponent implements OnInit {
       "password": this.password
     }
 
-    this.authService.login(details).catch(() => {
-      let elements = [
-        document.querySelector('.user-id'),
-        document.querySelector('.password'),
-      ]
-      elements.forEach((element: HTMLElement) => {
-        element.classList.add('invalid');
-      })
+    this.errorDetails = false;
 
-      document.querySelector('.alert').classList.remove('hidden');
+    this.authService.login(details).catch(() => {
+      this.errorDetails = true;
     });
+
     this.dataService.userId = this.userId;
   }
 }
