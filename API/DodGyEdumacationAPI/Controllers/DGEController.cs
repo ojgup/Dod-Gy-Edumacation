@@ -26,10 +26,15 @@ namespace DodGyEdumacationAPI.Controllers
         // GET: api/DGE/active/{userId}
         // Returns Session if found, otherwise NoContent() HttpResponse
         [HttpGet("open/{userId}"), Authorize]
-        public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId)
+        public async Task<ActionResult<IEnumerable<Session>>> GetOpenSession(string userId, int offset)
         {
+            if (offset > 720 || offset < -720)
+            {
+                return BadRequest(new { message = "Invalid offset." });
+            }
+
             var session =  await _context.Session.Where(s => s.UserId == userId && s.SessionEnd ==
-            null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear).FirstOrDefaultAsync();
+            null && s.SessionStart.AddMinutes(offset).DayOfYear == DateTime.Now.DayOfYear).FirstOrDefaultAsync();
 
             if (session != null)
                 return Ok(session);
