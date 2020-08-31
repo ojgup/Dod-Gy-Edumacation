@@ -47,16 +47,13 @@ export class SessionComponent implements OnInit {
   sessionEntered() {
     var date: Date = new Date();
     date.setHours(this.hourEntered, this.minutesEntered, 0, 0);
-    //Must add offset as JSON converts to UTC-time
-    //Timezoneoffset / 60 to get hours * -1 to get the correct result to add
-    var offset = (date.getTimezoneOffset() / 60) * -1;
 
     var difference = new Date();
     difference.setHours(difference.getHours() - 6);
 
     //Close Session
     if (this.session != null) {
-      date.setHours(date.getHours() + offset);
+      date.setHours(date.getHours());
       this.session.sessionEnd = date.toJSON();
       console.log(this.session);
       this.dataService.postEndSession(this.session);
@@ -67,7 +64,7 @@ export class SessionComponent implements OnInit {
 
     //Start Session
     if (date > difference) {
-      date.setHours(date.getHours() + offset);
+      date.setHours(date.getHours());
       if (this.session == null) {//Time acceptable
         let enteredSession: Session =
         {
