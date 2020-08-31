@@ -107,11 +107,11 @@ namespace DodGyEdumacationAPI.Controllers
         // POST: api/DGE/start
         //Returns an Ok response if insert Session successful, BadRequest response if body data improper, InternalServerError response if SQLException 
         [HttpPost("start"), Authorize]
-        public async Task<IActionResult> SessionStart(Session session)
+        public async Task<IActionResult> SessionStart(Session session, int offset)
         {
             try
             {
-                Session record = FindOpenSession(session);
+                Session record = FindOpenSession(session, offset);
 
                 if (record == null)
                 {
@@ -133,11 +133,11 @@ namespace DodGyEdumacationAPI.Controllers
         // PUT: api/DGE/end
         //Returns an Ok response if Session successfully closed, BadRequest response if body data improper, InternalServerError response if DBUpdateConcurrencyException 
         [HttpPut("end"), Authorize]
-        public async Task<IActionResult> SessionEnd(Session session)
+        public async Task<IActionResult> SessionEnd(Session session, int offset)
         {
             try
             {
-                Session record = FindOpenSession(session);
+                Session record = FindOpenSession(session, offset);
 
                 if (record != null)
                 {
@@ -158,10 +158,9 @@ namespace DodGyEdumacationAPI.Controllers
         }
 
         //Checks Session in database and returns an open Session
-        private Session FindOpenSession(Session session)
+        private Session FindOpenSession(Session session, int offset)
         {
-            Session record = (from s in _context.Session where s.UserId == session.UserId && s.SessionEnd == null && s.SessionStart.DayOfYear == DateTime.Now.DayOfYear select s).FirstOrDefault();
-            return record;
+            return (from s in _context.Session where s.UserId == session.UserId && s.SessionEnd == null && s.SessionStart.AddMinutes(offset).DayOfYear == DateTime.Now.DayOfYear select s).FirstOrDefault();
         }
 
     }
