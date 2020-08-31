@@ -1,22 +1,25 @@
+<div class="loading" [class.inactive]="!loggingIn">
+  <app-loading-spinner></app-loading-spinner>
+</div>
+
 <header>
-
   <div class="container">
-
     <div class="logo">
+      <a routerLink="" style="text-decoration:none">
         <h1 class="main-heading">DOD&GY EDUMACATION</h1>
-        <p class="sub-heading">COVID-19 Contact Tracer</p>
+        <div class="sub-heading">COVID-19 Contact Tracer</div>
+      </a>
     </div>
 
-      <nav>
-        <ul>
-          <li><a class="nav-link" href="#" routerLink="/">Time Entered</a></li>
-          <li><a class="nav-link" href="#" routerLink="/time-left">Time Left</a></li>
-          <li><a class="nav-link" href="#" routerLink="/reporting">Reporting</a></li>
-        </ul>
-      </nav>
-
+    <nav>
+      <ul>
+        <li *ngIf="!user || user.userType != 'Admin'"><a routerLink="/session" class="nav-link" href="#">Session</a></li>
+        <li><a routerLink="/reporting" class="nav-link" href="#">Reporting</a></li>
+        <li *ngIf="!loggedIn"><a routerLink="/login" class="nav-link" href="#">Login</a></li>
+        <li *ngIf="loggedIn"><a routerLink="/" class="nav-link" href="#" (click)="logout()">Logout</a></li>
+      </ul>
+    </nav>
   </div>
-
 </header>
 
 <router-outlet></router-outlet>

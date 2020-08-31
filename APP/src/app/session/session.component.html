@@ -1,0 +1,24 @@
+<div class="inputs">
+  <app-label class="col-left" labelName="User ID:" labelFor="user-id"></app-label>
+  <input [disabled]="true" class="col-mid user-id" [(ngModel)]="user.userId" name="user-id" type="text" />
+
+  <app-label class="col-left" labelName="Room:" labelFor="room"></app-label>
+  <input [disabled]="this.session != null" class="col-mid room" [(ngModel)]="roomNumber" name="room" type="text" />
+
+  <div *ngIf="user.userType == 'Staff'" class="button-box">
+    <button [class.inactive]="sessionType != 'Class'" class="btn class-btn" id="ClassButton" (click)="ClassButtonClicked()" type="button">Class</button>
+    <button [class.inactive]="sessionType != 'Office'" class="btn office-btn" id="OfficeButton" (click)="OfficeButtonClicked()" type="button">Office</button>
+  </div>
+
+  <app-label *ngIf="!this.session" class="col-left" labelName="Time Entered:" labelFor="time-entered"></app-label>
+  <app-label *ngIf="this.session" class="col-left" labelName="Time Left:" labelFor="time-entered"></app-label>
+
+  <input class="col-mid-left time" [(ngModel)]="hours" type="number" min="0" max="23" />
+  <div class="col-mid-mid">:</div>
+  <input class="col-mid-right time" [(ngModel)]="minutes" type="number" min="0" max="59" />
+
+  <div *ngIf="this.hours < 0 || this.hours > 23" class="alert col-mid">Invalid Hours</div>
+  <div *ngIf="this.minutes < 0 || this.minutes > 59" class="alert col-mid">Invalid minutes</div>
+
+  <app-btn-submit class="col-mid" (click)="sessionEntered()" name="Submit"></app-btn-submit>
+</div>
