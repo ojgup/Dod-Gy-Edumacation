@@ -8,8 +8,8 @@ VALUES
     ('103043778', HASHBYTES('SHA2_512', 'student'), 'John', 'Konstantinou', 'Student'),
     ('123456789', HASHBYTES('SHA2_512', 'student'), 'Jason', 'Yeggs', 'Student'),
     ('103049802x', HASHBYTES('SHA2_512', 'staff'), 'Stephen', 'Grouios', 'Staff'),
-    ('111222333x', HASHBYTES('SHA2_512', 'staff'), 'Boutros', 'Ghali', 'Staff');
-
+    ('123456789x', HASHBYTES('SHA2_512', 'staff'), 'Boutros', 'Ghali', 'Staff'),
+    ('123456789a', HASHBYTES('SHA2_512', 'admin'), 'Yeggs', 'Malone', 'Admin');
 GO
 
 INSERT INTO [Session]
