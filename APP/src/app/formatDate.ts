@@ -18,5 +18,5 @@ export function formatDate(date) {
     minute = '0' + minute;
   }
 
-  return `${ year }/${ month }/${ day } ${ hour }:${ minute }`;
+  return `${ day }/${ month }/${ year } ${ hour }:${ minute }`;
 }
