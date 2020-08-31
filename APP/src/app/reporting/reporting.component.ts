@@ -31,6 +31,11 @@ export class ReportingComponent implements OnInit {
   constructor(private dataService: DataService) {
     this.dataService.user.subscribe((value) => {
       this.user = value;
+      if (this.user.userType == 'Admin') {
+        this.userId = '';
+      } else {
+        this.userId = this.user.userId;
+      }
     });
   }
 
