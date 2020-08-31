@@ -39,7 +39,10 @@ export class DataService {
   /*Returns 404 error('No open sessions found') when no open sessions*/
   getOpenSession() {
     return new Promise((resolve, reject) => {
-      this._http.get<Session>(this.apiURL + "/DGE/open/" + this.user.getValue().userId).subscribe(
+      this._http.get<Session>(
+        this.apiURL + "/DGE/open/" + this.user.getValue().userId,
+        { params: new HttpParams().append('offset', JSON.stringify(new Date().getTimezoneOffset() * -1)) }
+      ).subscribe(
         (session) => {
           if (session) {
             this.session.next(<Session>session);
@@ -58,7 +61,14 @@ export class DataService {
   }
 
   postStartSession(sessionEntered: Session) {
-    this._http.post(this.apiURL + "/DGE/start", sessionEntered, { responseType: 'text' }).subscribe(
+    this._http.post(
+      this.apiURL + "/DGE/start",
+      sessionEntered,
+      {
+        responseType: 'text',
+        params: new HttpParams().append('offset', JSON.stringify(new Date().getTimezoneOffset() * -1))
+      }
+    ).subscribe(
       res => {
         this.getOpenSession();
         console.log('HTTP response', res);
@@ -70,7 +80,14 @@ export class DataService {
   }
 
   postEndSession(sessionEnd: Session) {
-    this._http.put(this.apiURL + "/DGE/end", sessionEnd).subscribe(
+    this._http.put(
+      this.apiURL + "/DGE/end",
+      sessionEnd,
+      {
+        responseType: 'text',
+        params: new HttpParams().append('offset', JSON.stringify(new Date().getTimezoneOffset() * -1))
+      }
+    ).subscribe(
       res => {
         this.getOpenSession();
         console.log("Session Ended");
