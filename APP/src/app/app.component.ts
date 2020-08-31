@@ -3,6 +3,7 @@ import { AuthService } from './services/auth.service';
 import { DataService } from './services/data.service';
 import { _ } from 'ag-grid-community';
 import { Router } from '@angular/router';
+import { User } from './user';
 
 @Component({
   selector: 'app-root',
@@ -14,6 +15,8 @@ export class AppComponent {
 
   loggedIn: boolean;
   loggingIn: boolean;
+
+  user: User;
 
   constructor(private authService: AuthService, private dataService: DataService, private router: Router) {
     this.authService.loggingIn.subscribe((value) => {
@@ -27,6 +30,9 @@ export class AppComponent {
         this.dataService.user.next(null);
         this.router.navigate(["/login"])
       }
+    });
+    this.dataService.user.subscribe((value) => {
+      this.user = value;
     });
   }
 
