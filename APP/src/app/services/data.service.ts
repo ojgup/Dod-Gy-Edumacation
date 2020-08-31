@@ -98,6 +98,9 @@ export class DataService {
 
   getReport(userId: string, start: Date, end: Date) {
     return new Promise((resolve, reject) => {
+      let offset = new Date().getTimezoneOffset() * 60*1000
+      start = new Date(start.getTime() + offset)
+      end = new Date(end.getTime() + offset)
       this._http.get<Array<Report>>(
         this.apiURL + "/DGE/report",
         { params: new HttpParams().append('userId', userId).append('start', start.toUTCString()).append('end', end.toUTCString()) }
@@ -106,7 +109,6 @@ export class DataService {
           res.map((result) => {
             result.sessionStart = new Date(result.sessionStart);
             result.sessionEnd = new Date(result.sessionEnd);
-            let offset = new Date().getTimezoneOffset() * 60*1000
             result.sessionStart.setTime(result.sessionStart.getTime() - offset);
             result.sessionEnd.setTime(result.sessionEnd.getTime() - offset);
             return result;
