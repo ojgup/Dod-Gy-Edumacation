@@ -13,12 +13,12 @@
   <app-label *ngIf="!this.session" class="col-left" labelName="Time Entered:" labelFor="time-entered"></app-label>
   <app-label *ngIf="this.session" class="col-left" labelName="Time Left:" labelFor="time-entered"></app-label>
 
-  <input class="col-mid-left time" [(ngModel)]="hourEntered" type="number" min="0" max="23" />
+  <input class="col-mid-left time" [(ngModel)]="hours" type="number" min="0" max="23" />
   <div class="col-mid-mid">:</div>
-  <input class="col-mid-right time" [(ngModel)]="minutesEntered" type="number" min="0" max="59" />
+  <input class="col-mid-right time" [(ngModel)]="minutes" type="number" min="0" max="59" />
 
-  <div *ngIf="this.hourEntered < 0 || this.hourEntered > 23" class="alert col-mid">Invalid Hours</div>
-  <div *ngIf="this.minutesEntered < 0 || this.minutesEntered > 59" class="alert col-mid">Invalid minutes</div>
+  <div *ngIf="this.hours < 0 || this.hours > 23" class="alert col-mid">Invalid Hours</div>
+  <div *ngIf="this.minutes < 0 || this.minutes > 59" class="alert col-mid">Invalid minutes</div>
 
   <app-btn-submit class="col-mid" (click)="sessionEntered()" name="Submit"></app-btn-submit>
 </div>
