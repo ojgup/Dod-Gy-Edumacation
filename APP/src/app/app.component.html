@@ -3,23 +3,19 @@
 </div>
 
 <header>
-  <div class="container">
-    <div class="logo">
-      <a routerLink="" style="text-decoration:none">
-        <h1 class="main-heading">DOD&GY EDUMACATION</h1>
-        <div class="sub-heading">COVID-19 Contact Tracer</div>
-      </a>
-    </div>
-
-    <nav>
-      <ul>
-        <li *ngIf="!user || user.userType != 'Admin'"><a routerLink="/session" class="nav-link" href="#">Session</a></li>
-        <li><a routerLink="/reporting" class="nav-link" href="#">Reporting</a></li>
-        <li *ngIf="!loggedIn"><a routerLink="/login" class="nav-link" href="#">Login</a></li>
-        <li *ngIf="loggedIn"><a routerLink="/" class="nav-link" href="#" (click)="logout()">Logout</a></li>
-      </ul>
-    </nav>
+  <div class="logo">
+    <a routerLink="" style="text-decoration:none">
+      <h1 class="main-heading">DOD&GY EDUMACATION</h1>
+      <div class="sub-heading">COVID-19 Contact Tracer</div>
+    </a>
   </div>
+
+  <nav>
+    <div class="nav-link" routerLink="/session"             *ngIf="!user || user.userType != 'Admin'" routerLinkActive="active-link"><div>Session</div></div>
+    <div class="nav-link" routerLink="/reporting"                                                     routerLinkActive="active-link"><div>Reporting</div></div>
+    <div class="nav-link" routerLink="/login"               *ngIf="!loggedIn"                         routerLinkActive="active-link"><div>Login</div></div>
+    <div class="nav-link" routerLink="/" (click)="logout()" *ngIf="loggedIn"                                                        ><div>Logout</div></div>
+  </nav>
 </header>
 
 <router-outlet></router-outlet>
