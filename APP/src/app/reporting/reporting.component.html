@@ -11,6 +11,8 @@
     <app-btn-submit id="ReportingSubmitBtn" class="col-mid" (click)="GetSessions()" name="Submit"></app-btn-submit>
 </div>
 
+<app-label *ngIf="noResults" class="none" labelName='No results found.'></app-label>
+
 <div class="reporting"  *ngIf="reports">
     <app-label class="days-on-campus" labelName="Days on Campus: {{this.days}}"></app-label>
     <ag-grid-angular class="ag-theme-alpine report-grid" [rowData]="reports" [columnDefs]="columnDefs"></ag-grid-angular>

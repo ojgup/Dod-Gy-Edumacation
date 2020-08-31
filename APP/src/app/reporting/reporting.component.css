@@ -68,3 +68,8 @@ input:focus {
   height: 400px;
   font-weight: 500;
 }
+
+app-label.none {
+  display: block;
+  text-align: center;
+}

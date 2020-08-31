@@ -45,7 +45,10 @@ export class DataService {
       ).subscribe(
         (session) => {
           if (session) {
-            this.session.next(<Session>session);
+            this.session.next(<Session>{
+              ...session,
+              sessionStart: new Date(session.sessionStart),
+            });
           } else {
             this.session.next(null);
             console.log("no session");
@@ -61,39 +64,47 @@ export class DataService {
   }
 
   postStartSession(sessionEntered: Session) {
-    this._http.post(
-      this.apiURL + "/DGE/start",
-      sessionEntered,
-      {
-        responseType: 'text',
-        params: new HttpParams().append('offset', JSON.stringify(new Date().getTimezoneOffset() * -1))
-      }
-    ).subscribe(
-      res => {
-        this.getOpenSession();
-        console.log('HTTP response', res);
-      },
-      err => {
-        console.log('HTTP error', err.error.text);
-      }
-    );
+    return new Promise((resolve, reject) => {
+      this._http.post(
+        this.apiURL + "/DGE/start",
+        sessionEntered,
+        {
+          responseType: 'text',
+          params: new HttpParams().append('offset', JSON.stringify(new Date().getTimezoneOffset() * -1))
+        }
+      ).subscribe(
+        res => {
+          this.getOpenSession().then(() => {
+            resolve(res);
+          });
+        },
+        err => {
+          reject(err);
+        }
+      );
+    });
   }
 
   postEndSession(sessionEnd: Session) {
-    this._http.put(
-      this.apiURL + "/DGE/end",
-      sessionEnd,
-      {
-        responseType: 'text',
-        params: new HttpParams().append('offset', JSON.stringify(new Date().getTimezoneOffset() * -1))
-      }
-    ).subscribe(
-      res => {
-        this.getOpenSession();
-        console.log("Session Ended");
-      },
-      err => {console.log(err)}
-    );
+    return new Promise((resolve, reject) => {
+      this._http.put(
+        this.apiURL + "/DGE/end",
+        sessionEnd,
+        {
+          responseType: 'text',
+          params: new HttpParams().append('offset', JSON.stringify(new Date().getTimezoneOffset() * -1))
+        }
+      ).subscribe(
+        res => {
+          this.getOpenSession().then(() => {
+            resolve(res);
+          });
+        },
+        err => {
+          reject(err);
+        }
+      );
+    });
   }
 
   getReport(userId: string, start: Date, end: Date) {
@@ -106,13 +117,15 @@ export class DataService {
         { params: new HttpParams().append('userId', userId).append('start', start.toUTCString()).append('end', end.toUTCString()) }
       ).subscribe(
         (res) => {
-          res.map((result) => {
-            result.sessionStart = new Date(result.sessionStart);
-            result.sessionEnd = new Date(result.sessionEnd);
-            result.sessionStart.setTime(result.sessionStart.getTime() - offset);
-            result.sessionEnd.setTime(result.sessionEnd.getTime() - offset);
-            return result;
-          })
+          if (res) {
+            res.map((result) => {
+              result.sessionStart = new Date(result.sessionStart);
+              result.sessionEnd = new Date(result.sessionEnd);
+              result.sessionStart.setTime(result.sessionStart.getTime() - offset);
+              result.sessionEnd.setTime(result.sessionEnd.getTime() - offset);
+              return result;
+            })
+          }
           resolve(res)
         },
         (err) => {reject()}
