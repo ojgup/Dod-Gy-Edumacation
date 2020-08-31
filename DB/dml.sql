@@ -10,7 +10,6 @@ VALUES
     ('103049802x', HASHBYTES('SHA2_512', 'staff'), 'Stephen', 'Grouios', 'Staff'),
     ('123456789x', HASHBYTES('SHA2_512', 'staff'), 'Boutros', 'Ghali', 'Staff'),
     ('123456789a', HASHBYTES('SHA2_512', 'admin'), 'Yeggs', 'Malone', 'Admin');
-
 GO
 
 INSERT INTO [Session]
