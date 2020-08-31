@@ -13,6 +13,7 @@ import { ReportingComponent } from './reporting/reporting.component';
 import { AgGridModule } from 'ag-grid-angular';
 import { LoginComponent } from './login/login.component';
 import { JwtModule } from '@auth0/angular-jwt';
+import { LoadingSpinnerComponent } from './loading-spinner/loading-spinner.component';
 
 export function tokenGetter() {
   return JSON.parse(localStorage.getItem('Authorization'));
@@ -26,7 +27,8 @@ export function tokenGetter() {
     BtnSubmitComponent,
     SessionComponent,
     ReportingComponent,
-    LoginComponent
+    LoginComponent,
+    LoadingSpinnerComponent
   ],
   imports: [
     BrowserModule,

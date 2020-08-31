@@ -44,8 +44,6 @@ header {
         a.nav-link {
           text-decoration: none;
           color: black;
-
-
         }
       }
     }
@@ -62,5 +60,13 @@ header {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: red;
+  background-color: rgba($color: #000000, $alpha: 0.5);
+}
+
+app-loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
 }
