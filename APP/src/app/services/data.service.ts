@@ -85,7 +85,17 @@ export class DataService {
         this.apiURL + "/DGE/report",
         { params: new HttpParams().append('userId', userId).append('start', start.toUTCString()).append('end', end.toUTCString()) }
       ).subscribe(
-        (res) => {resolve(res)},
+        (res) => {
+          res.map((result) => {
+            result.sessionStart = new Date(result.sessionStart);
+            result.sessionEnd = new Date(result.sessionEnd);
+            let offset = new Date().getTimezoneOffset() * 60*1000
+            result.sessionStart.setTime(result.sessionStart.getTime() - offset);
+            result.sessionEnd.setTime(result.sessionEnd.getTime() - offset);
+            return result;
+          })
+          resolve(res)
+        },
         (err) => {reject()}
       )
     })

@@ -46,6 +46,7 @@ export class ReportingComponent implements OnInit {
     this.StartDate.setHours(0, 0, 0);
     this.EndDate = new Date(this.EndDate);
     this.EndDate.setHours(0, 0, 0);
+    this.EndDate.setTime(this.EndDate.getTime() + 24*60*60*1000);
     this.dataService.getReport(this.userId, this.StartDate, this.EndDate).then((data: Array<Report>) => {
       this.reports = data;
       this.days = data.length;
